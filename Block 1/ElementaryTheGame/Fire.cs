@@ -1,4 +1,4 @@
-﻿    public class Fire : Player
+﻿public class Fire : Player
 {
     public Fire()
     {
