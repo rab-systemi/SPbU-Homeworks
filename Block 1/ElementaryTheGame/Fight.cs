@@ -2,8 +2,7 @@
 {
     public void Start(Player player1, Player player2)
     {
-        Random Turn = new Random(); //Случайно выбираем номер игрока, делающего первый ход
-        int firstTurn = Turn.Next(1,3);
+        
         ConsoleKeyInfo gameMode;
 
         Console.WriteLine("Добро пожаловать в Elementary!\n\n" +
@@ -40,6 +39,7 @@
                 continue;
             }
         }
+
         Console.WriteLine("\nВам на выбор предлагаются 4 стихии, за которые вы можете играть:");
         Console.WriteLine("(подробнее о каждой стихии можно прочитать в файле Readme)");
         Console.WriteLine("\t1. Огонь");
@@ -52,15 +52,16 @@
             PvsP pvsp = new PvsP(); //Запускаем битву в режиме Игрок против Игрока
             pvsp.RunPvsP(player1, player2);
         }
-        if (gameMode.Key == ConsoleKey.D2) //Если пользователь выбрал режим игры 2
+        else if (gameMode.Key == ConsoleKey.D2) //Если пользователь выбрал режим игры 2
         {
             PvsAI pvsai = new PvsAI(); //Запускаем битву в режиме Игрок против ИИ
             pvsai.RunPvsAI(player1, player2);
         }
-        if (gameMode.Key == ConsoleKey.D3) //Если пользователь выбрал режим игры 3
+        else if (gameMode.Key == ConsoleKey.D3) //Если пользователь выбрал режим игры 3
         {
             AIvsAI aivsai = new AIvsAI(); //Запускаем битву в режиме Игрок против ИИ
             aivsai.RunAIvsAI(player1, player2);
         }
     }
+    
 }

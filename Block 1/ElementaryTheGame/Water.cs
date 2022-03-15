@@ -1,28 +1,53 @@
 ﻿public class Water : Player
 {
-    public Water(int HP, int Damage)
+    public Water()
     {
-        this.HP = HP;
-        this.Damage = Damage;
+        HP = 100;
+        Damage = 3;
+    }
+
+    public override void Ability(Player enemy) //Абилка персонажа стихии Воды
+    {
+
+    }
+    public override void Hit(Player enemy) //Способность удара картами одной из стихий
+    {                                      //Башней использоваться не может
+        enemy.GetDamage(Damage);
     }
 }
 
 public class Aquaman : Water
 {
-    public Aquaman(int HP = 10, int Damage = 10) : base(HP, Damage) { }
+    public Aquaman() : base()
+    {
+        HP = 10;
+        Damage = 10;
+    }
 }
 
 public class Wall : Water
 {
-    public Wall(int HP = 17, int Damage = 1) : base(HP, Damage) { }
+    public Wall() : base()
+    {
+        HP = 17;
+        Damage = 1;
+    }
 }
 
 public class Poseidon : Water
 {
-    public Poseidon(int HP = 14, int Damage = 23) : base(HP, Damage) { }
+    public Poseidon() : base()
+    {
+        HP = 14;
+        Damage = 23;
+    }
 }
 
 public class WaterSpirit : Water
 {
-    public WaterSpirit(int HP = 3, int Damage = 3) : base(HP, Damage) { }
+    public WaterSpirit() : base()
+    {
+        HP = 3;
+        Damage = 3;
+    }
 }

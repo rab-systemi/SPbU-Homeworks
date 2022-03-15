@@ -3,6 +3,7 @@ Player player2 = new Player();
 Fight game = new Fight();
 
 game.Start(player1, player2);
+
 /*
 Fire TEST = new Fire(100, 10);
 player1 = TEST;
@@ -15,4 +16,10 @@ TEST.GetDamage(4);
 Console.WriteLine(player1.HP);
 Console.WriteLine(TEST.HP);
 Console.Write(test.HP);
+*/
+/*
+Fire test = new Fire();
+Knight TEST = new Knight();
+Console.WriteLine(test.HP);
+Console.WriteLine(TEST.HP);
 */

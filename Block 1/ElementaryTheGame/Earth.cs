@@ -1,28 +1,53 @@
 ﻿public class Earth : Player
 {
-    public Earth(int HP, int Damage)
+    public Earth()
     {
-        this.HP = HP;
-        this.Damage = Damage;
+        HP = 100;
+        Damage = 6;
+    }
+
+    public override void Ability(Player enemy) //Абилка персонажа стихии Земли
+    {
+
+    }
+    public override void Hit(Player enemy) //Способность удара картами одной из стихий
+    {                                      //Башней использоваться не может
+        enemy.GetDamage(Damage);
     }
 }
 
 public class StoneBrothers : Earth
 {
-    public StoneBrothers(int HP = 12, int Damage = 8) : base(HP, Damage) { }
+    public StoneBrothers() : base()
+    {
+        HP = 12;
+        Damage = 8;
+    }
 }
 
 public class TreeOfLife : Earth
 {
-    public TreeOfLife(int HP = 20, int Damage = 0) : base(HP, Damage) { }
+    public TreeOfLife() : base()
+    {
+        HP = 20;
+        Damage = 0;
+    }
 }
 
 public class Giant : Earth
 {
-    public Giant(int HP = 23, int Damage = 15) : base(HP, Damage) { }
+    public Giant() : base()
+    {
+        HP = 23;
+        Damage = 15;
+    }
 }
 
 public class EarthSpirit : Earth
 {
-    public EarthSpirit(int HP = 3, int Damage = 3) : base(HP, Damage) { }
+    public EarthSpirit() : base()
+    {
+        HP = 3;
+        Damage = 3;
+    }
 }

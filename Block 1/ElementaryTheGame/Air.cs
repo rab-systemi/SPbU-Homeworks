@@ -1,28 +1,53 @@
 ﻿public class Air : Player
 {
-    public Air(int HP, int Damage)
+    public Air()
     {
-        this.HP = HP;
-        this.Damage = Damage;
+        HP = 100;
+        Damage = 4;
+    }
+
+    public override void Ability(Player enemy) //Абилка персонажа стихии Воздуха
+    {
+
+    }
+    public override void Hit(Player enemy) //Способность удара картами одной из стихий
+    {                                      //Башней использоваться не может
+        enemy.GetDamage(Damage);
     }
 }
 
 public class Ninja : Air
 {
-    public Ninja(int HP = 8, int Damage = 12) : base(HP, Damage) { }
+    public Ninja() : base()
+    {
+        HP = 8;
+        Damage = 12;
+    }
 }
 
 public class Eagle : Air
 {
-    public Eagle(int HP = 15, int Damage = 5) : base(HP, Damage) { }
+    public Eagle() : base()
+    {
+        HP = 15;
+        Damage = 5;
+    }
 }
 
 public class Storm : Air
 {
-    public Storm(int HP = 19, int Damage = 21) : base(HP, Damage) { }
+    public Storm() : base()
+    {
+        HP = 19;
+        Damage = 21;
+    }
 }
 
 public class AirSpirit : Air
 {
-    public AirSpirit(int HP = 3, int Damage = 3) : base(HP, Damage) { }
+    public AirSpirit() : base()
+    {
+        HP = 3;
+        Damage = 3;
+    }
 }
