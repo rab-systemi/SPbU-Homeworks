@@ -14,20 +14,20 @@
         while (true) //Ждем от пользователя нажатия клавиши. Если он нажал что-то не то, ждем снова
         {
             Console.TreatControlCAsInput = true; //На всякий случай ограничиваем пользователя от нажатия CTRL+C
-            ConsoleKeyInfo Choice = Console.ReadKey();
-            gameMode = Choice;
+            ConsoleKeyInfo choice = Console.ReadKey();
+            gameMode = choice;
 
-            if (Choice.Key == ConsoleKey.D1) //Пользователь нажал 1
+            if (choice.Key == ConsoleKey.D1) //Пользователь нажал 1
             {
                 Console.WriteLine("\nВы выбрали режим Игрок против Игрока");
                 break;
             }
-            else if (Choice.Key == ConsoleKey.D2) //Пользователь нажал 2
+            else if (choice.Key == ConsoleKey.D2) //Пользователь нажал 2
             {
                 Console.WriteLine("\nВы выбрали режим Игрок против ИИ");
                 break;
             }
-            else if (Choice.Key == ConsoleKey.D3) //Пользователь нажал 3
+            else if (choice.Key == ConsoleKey.D3) //Пользователь нажал 3
             {
                 Console.WriteLine("\nВы выбрали режим ИИ против ИИ");
                 break;

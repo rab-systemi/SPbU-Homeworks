@@ -4,6 +4,7 @@ Fight game = new Fight();
 
 game.Start(player1, player2); //Начинается игра
 
+/*
 Player knight = new Knight();
 Player guardian = new Guardian();
 Player surtur = new Surtur();
@@ -23,7 +24,7 @@ Player ninja = new Ninja();
 Player eagle = new Eagle();
 Player storm = new Storm();
 Player airSpirit = new AirSpirit();
-
+*/
 
 /*
 Fire TEST = new Fire(100, 10);
