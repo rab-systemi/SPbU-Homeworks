@@ -6,8 +6,6 @@
     public int[] Deck = new int[6]; //Рука игрока, максимум - 6 карт
     public Player[] Fields = new Player[4]; //Тоже поле игрока для карт, но в нем содержатся объекты типа Player
 
-    public int[] FieldHPs = new int[4];
-
     public virtual void Ability(Player enemy) { }
     public virtual void Hit(Player enemy) { }
     public void GetDamage(int damage) //Метод получения урона
@@ -133,13 +131,10 @@
     }
     public void Move(Player player, Player enemy) //Метод хода игрока
     {
-
         player.GetCards(1);
         Console.WriteLine("Вы получили карту в начале хода!\n\n");
 
-        PrintSituation(player, enemy);
-
-        
+        PrintSituation(player, enemy);   
 
         Console.WriteLine("Вы можете выбрать карту в руке (нажмите 1,2,3 или 4), чтобы разместить ее на поле, и/или " +
             "использовать способность стихии (нажмите A).");
@@ -1035,6 +1030,7 @@
                 {
                     Console.WriteLine("\nВы применили способность башни!");
                     player.Ability(enemy); //TO CHECK
+                    abilityCount += 1;
                     continue;
                 }
                 else
@@ -1061,19 +1057,32 @@
             }
         }
 
+
+        /////////////////////////////////////////////////////////////////
+        //Процесс атаки
+
+        for (int i = 0; i < 4; i++) //Цикл проходится по клеткам обоих игроков
+        {
+            if (player.Field[i] != 0) //Если на клетке есть карта игрока
+            {
+                if (enemy.Field[i] != 0) //Если на клетке напротив есть карта противника
+                {
+                    player.Fields[i].Hit(enemy.Fields[i]); //Удар по карте противника
+                    if (enemy.Fields[i].HP <= 0) //Если удар оказался достаточно сильным
+                    {
+                        enemy.Field[i] = 0; //Очищаем клетку противника
+                        enemy.Fields[i] = null; 
+                    }
+                }
+                else
+                {
+                    player.Fields[i].Hit(enemy);
+                }
+            }
+        }
+
         PrintSituation(player, enemy);
     }
-    /*
-    private void ChooseField(ConsoleKeyInfo press)
-    {
-        Console.WriteLine("\nВыберите клетку, на которую Вы хотите разместить выбранную карту (нажмите 1,2,3 или 4)");
-        Console.WriteLine("Вы также можете нажать 0, чтобы вернуться назад.");
-        switch (press.Key)
-        {
-            case ConsoleKey.A:
-        }
-    }
-    */
 
     private void PrintSituation(Player player, Player enemy)
     {
@@ -1087,188 +1096,76 @@
             {
                 if (enemy is Fire)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tСуртур:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tСуртур:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tСуртур:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Water)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tПосейдон:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tПосейдон:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tПосейдон:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Earth)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tГигант:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tГигант:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tГигант:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Air)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tШторм:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tШторм:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tШторм:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
             }
             else if (enemy.Field[i] == 2) //Поменять условие, переменные с ХП и персонажей
             {
                 if (enemy is Fire)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tХранитель:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tХранитель:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tХранитель:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Water)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tВодная стена:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урон");
-                    }
-                    else
-                    {
-                        Console.Write($"\tВодная стена:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урон");
-                    }
+                    Console.Write($"\tВодная стена:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урон");
                 }
                 else if (enemy is Earth)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДрево Жизни:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДрево Жизни:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДрево Жизни:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Air)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tОрёл:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tОрёл:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tОрёл:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
             }
             else if (enemy.Field[i] == 3) //Поменять условие, переменные с ХП и персонажей
             {
                 if (enemy is Fire)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tРыцарь:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tРыцарь:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tРыцарь:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Water)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tАквамен:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tАквамен:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tАквамен:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Earth)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tКаменные братья:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tКаменные братья:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tКаменные братья:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Air)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tНиндзя:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tНиндзя:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tНиндзя:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
             }
             else if (enemy.Field[i] == 4) //Поменять условие, переменные с ХП и персонажей
             {
                 if (enemy is Fire)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДух Огня:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДух Огня:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДух Огня:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Water)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДух Воды:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДух Воды:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДух Воды:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Earth)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДух Земли:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДух Земли:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДух Земли:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
                 else if (enemy is Air)
                 {
-                    if (enemy.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДух Воздуха:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДух Воздуха:{enemy.FieldHPs[i]} HP,{enemy.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДух Воздуха:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
             }
             else
@@ -1285,188 +1182,76 @@
             {
                 if (player is Fire)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tСуртур:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tСуртур:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tСуртур:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Water)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tПосейдон:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tПосейдон:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tПосейдон:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Earth)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tГигант:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tГигант:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tГигант:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Air)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tШторм:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tШторм:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tШторм:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
             }
             else if (player.Field[i] == 2) //Поменять условие, переменные с ХП и персонажей
             {
                 if (player is Fire)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tХранитель:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tХранитель:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tХранитель:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Water)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tВодная стена:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tВодная стена:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tВодная стена:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Earth)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДрево Жизни:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДрево Жизни:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДрево Жизни:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Air)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tОрёл:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tОрёл:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tОрёл:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
             }
             else if (player.Field[i] == 3) //Поменять условие, переменные с ХП и персонажей
             {
                 if (player is Fire)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tРыцарь:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tРыцарь:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tРыцарь:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Water)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tАквамен:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tАквамен:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tАквамен:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Earth)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tКаменные братья:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tКаменные братья:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tКаменные братья:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Air)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tНиндзя:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tНиндзя:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tНиндзя:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
             }
             else if (player.Field[i] == 4) //Поменять условие, переменные с ХП и персонажей
             {
                 if (player is Fire)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДух Огня:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДух Огня:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДух Огня:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Water)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДух Воды:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДух Воды:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДух Воды:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Earth)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДух Земли:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДух Земли:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДух Земли:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
                 else if (player is Air)
                 {
-                    if (player.FieldHPs[i] == 0)
-                    {
-                        Console.Write($"\tДух Воздуха:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
-                    }
-                    else
-                    {
-                        Console.Write($"\tДух Воздуха:{player.FieldHPs[i]} HP,{player.Fields[i].Damage} урона");
-                    }
+                    Console.Write($"\tДух Воздуха:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
             }
             else
@@ -1563,62 +1348,5 @@
             }
         }
         Console.WriteLine("\n");
-        
     }
-
-    /*
-    private Player SetCard(Player player, Player playerField1, Player playerField2, Player playerField3,Player playerField4,
-                            Player enemyField1, Player enemyField2, Player enemyField3, Player enemyField4)
-    {
-        while (true) //Ждем от пользователя нажатия клавиши. Если он нажал что-то не то, ждем снова
-        {
-
-            Console.TreatControlCAsInput = true; //На всякий случай ограничиваем пользователя от нажатия CTRL+C
-            ConsoleKeyInfo cardChoice = Console.ReadKey();
-
-
-            if (cardChoice.Key == ConsoleKey.D1) //Пользователь нажал 1
-            {
-                bool flagCard = false;
-                for (int i = 0; i < 6; i++)
-                {
-                    if (player.Deck[i] == 1)
-                    {
-                        //Выбрать поле для размещения карты
-                        
-                        flagCard = true;
-                        break;
-                    }
-                }
-                if (!flagCard)
-                {
-                    Console.WriteLine("У Вас в руке нет данной карты. Введите другое значение.");
-                    continue;
-                }
-                break;
-            }
-            else if (cardChoice.Key == ConsoleKey.D2) //Пользователь нажал 2
-            {
-                Console.WriteLine("\nВы выбрали режим Игрок против ИИ");
-                break;
-            }
-            else if (cardChoice.Key == ConsoleKey.D3) //Пользователь нажал 3
-            {
-                Console.WriteLine("\nВы выбрали режим ИИ против ИИ");
-                break;
-            }
-            else if (cardChoice.Key == ConsoleKey.D4) //Пользователь нажал 4
-            {
-                Console.WriteLine("\nВы выбрали режим ИИ против ИИ");
-                break;
-            }
-            else //Пользователь нажал что-то еще, а это недопустимо
-            {
-                Console.WriteLine("\nВведено недопустимое значение. " +
-            "Попробуйте, пожалуйста, еще раз.");
-                continue;
-            }
-        }
-    }
-    */
 }
