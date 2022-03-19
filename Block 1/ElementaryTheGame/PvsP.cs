@@ -18,7 +18,7 @@
             Console.WriteLine("Первым ходит Игрок 1! Он получает 2 карты, Игрок 2 получает 3 карты\n");
             playerNew.GetCards(1); //Игрок 1 получил 2 карты, дека не пуста
             enemyNew.GetCards(2); //Игрок 2 получил 3 карты, дека не пуста
-            Console.WriteLine("\n\tИгрок 1 делает свой ход!\n");
+            Console.WriteLine("\n\t\tИгрок 1 делает свой ход!\n");
 
             playerNew.Move(playerNew, enemyNew);
             turns++;
@@ -28,7 +28,7 @@
             Console.WriteLine("Первым ходит Игрок 2!  Он получает 2 карты, Игрок 1 получает 3 карты\n");
             enemyNew.GetCards(1); //Игрок 2 получил 2 карты, дека не пуста
             playerNew.GetCards(2); //Игрок 1 получил 3 карты, дека не пуста
-            Console.WriteLine("\n\tИгрок 2 делает свой ход!\n");
+            Console.WriteLine("\n\t\tИгрок 2 делает свой ход!\n");
 
             enemyNew.Move(enemyNew, playerNew);
             
@@ -38,12 +38,12 @@
         {
             if(turns % 2 != 0)
             {
-                Console.WriteLine("\n\tИгрок 1 делает свой ход!\n");
+                Console.WriteLine("\n\t\tИгрок 1 делает свой ход!\n");
                 playerNew.Move(playerNew, enemyNew);
             }
             else
             {
-                Console.WriteLine("\n\tИгрок 2 делает свой ход!\n");
+                Console.WriteLine("\n\t\tИгрок 2 делает свой ход!\n");
                 enemyNew.Move(enemyNew, playerNew);
             }
             turns++;
@@ -56,6 +56,5 @@
         {
             Console.WriteLine("\nИгрок 1 победил! Игра окончена!");
         }
-        
     }
 }

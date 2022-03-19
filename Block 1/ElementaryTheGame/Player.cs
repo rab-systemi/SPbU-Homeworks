@@ -6,7 +6,7 @@
     public int[] Deck = new int[6]; //Рука игрока, максимум - 6 карт
     public Player[] Fields = new Player[4]; //Тоже поле игрока для карт, но в нем содержатся объекты типа Player
 
-    public virtual void Ability(Player enemy) { }
+    public virtual void Ability(Player player, Player enemy) { }
     public virtual void Hit(Player enemy) { }
     public void GetDamage(int damage) //Метод получения урона
     {
@@ -67,10 +67,32 @@
                 break;
         }
     }
-    public int RandomValue() //Метод, случайно выбирающий число от 1 до 4
+
+    public Player ChooseElementAI()
+    {
+        int element = RandomValue(5);
+        switch (element)
+        {
+            case 1:
+                return new Fire();
+                break;
+            case 2:
+                return new Water();
+                break;
+            case 3:
+                return new Earth();
+                break;
+            case 4:
+                return new Air();
+                break;
+            default:
+                return null;
+        }
+    }
+    public int RandomValue(int number) //Метод, случайно выбирающий число от 1 до number
     {
         Random random = new Random();
-        int value = random.Next(1, 5);
+        int value = random.Next(1, number);
 
         return value;
     }
@@ -195,14 +217,8 @@
                                                 player.Fields[0] = storm;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for(int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 1)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 1);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -237,14 +253,8 @@
                                                 player.Fields[1] = storm;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 1)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 1);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -279,14 +289,8 @@
                                                 player.Fields[2] = storm;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 1)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 1);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -321,14 +325,8 @@
                                                 player.Fields[3] = storm;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 1)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 1);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -414,14 +412,8 @@
                                                 player.Fields[0] = eagle;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 2)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 2);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -456,14 +448,8 @@
                                                 player.Fields[1] = eagle;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 2)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 2);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -498,14 +484,8 @@
                                                 player.Fields[2] = eagle;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 2)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 2);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -540,14 +520,8 @@
                                                 player.Fields[3] = new Eagle();
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 2)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 2);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -633,14 +607,8 @@
                                                 player.Fields[0] = ninja;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 3)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 3);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -675,14 +643,8 @@
                                                 player.Fields[1] = ninja;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 3)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 3);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -717,14 +679,8 @@
                                                 player.Fields[2] = ninja;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 3)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 3);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -759,14 +715,8 @@
                                                 player.Fields[3] = ninja;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 3)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 3);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -851,14 +801,8 @@
                                                 player.Fields[0] = airSpirit;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 4)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 4);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -893,14 +837,8 @@
                                                 player.Fields[1] = airSpirit;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 4)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 4);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -935,14 +873,8 @@
                                                 player.Fields[2] = airSpirit;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 4)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 4);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -977,14 +909,8 @@
                                                 player.Fields[3] = airSpirit;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            for (int k = 0; k < 6; k++)
-                                            {
-                                                if (player.Deck[k] == 4)
-                                                {
-                                                    player.Deck[k] = 0;
-                                                    break;
-                                                }
-                                            }
+                                            CellClearing(player, 4);
+                                            PrintSituation(player, enemy);
                                             break;
                                         }
                                         else
@@ -1029,8 +955,19 @@
                 if (abilityCount == 0)
                 {
                     Console.WriteLine("\nВы применили способность башни!");
-                    player.Ability(enemy); //TO CHECK
-                    abilityCount += 1;
+                    player.Ability(player, enemy);
+                    for (int i = 0; i < 4; i++)
+                    {
+                        if (enemy.Field[i] != 0)
+                        {
+                            if (enemy.Fields[i].HP <= 0) //Если удар оказался достаточно сильным
+                            {
+                                enemy.Field[i] = 0; //Очищаем клетку противника
+                                enemy.Fields[i] = null;
+                            }
+                        }
+                    }
+                    abilityCount++;
                     continue;
                 }
                 else
@@ -1041,7 +978,14 @@
             }
             else if (press.Key == ConsoleKey.I) //Пользователь нажал ENTER
             {
-                Console.WriteLine("\n");//TO FINISH
+                Console.WriteLine("\n\n\tСтихия Огня: Рыцарь(7 HP,14 урона), Хранитель(14 HP,3 урона), Суртур(20 HP,20 урона), Дух Огня(3 HP, 3 урона)");
+                Console.WriteLine("Способность стихии Огня: запускает Fireball по башне противника, нанося по ней 10 урона.");
+                Console.WriteLine("\tСтихия Воды: Аквамен(10 HP,10 урона), Водная стена(17 HP,1 урона), Посейдон(17 HP,23 урона), Дух Воды(3 HP, 3 урона)");
+                Console.WriteLine("Способность стихии Воды: топит башню и карты противника, нанося всем 3 урона.");
+                Console.WriteLine("\tСтихия Земли: Каменные братья(12 HP,8 урона), Древо Жизни(20 HP,0 урона), Гигант(23 HP,17 урона), Дух Земли(3 HP, 3 урона)");
+                Console.WriteLine("Способность стихии Земли: устраивает землетрясение, нанося картам противника 6 урона.");
+                Console.WriteLine("\tСтихия Воздуха: Ниндзя(8 HP,12 урона), Орёл(15 HP,5 урона), Шторм(19 HP,21 урона), Дух Воздуха(3 HP, 3 урона)");
+                Console.WriteLine("Способность стихии Воздуха: обращается за помощью к Солнцу: башня игрока получает 6 HP, по башне противника наносится 4 урона.\n\n");
                 continue;
             }
             else if (press.Key == ConsoleKey.Enter) //Пользователь нажал ENTER
@@ -1080,8 +1024,196 @@
                 }
             }
         }
+    }
+
+    public void MoveAI(Player player, Player enemy)
+    {
+        player.GetCards(1);
+        Console.WriteLine("ИИ получил карту в начале хода!\n\n");
 
         PrintSituation(player, enemy);
+
+        for (int i = 0; i < 4; i++)
+        {
+            int fieldFlag = RandomValue(3);
+            if (player.Field[i] == 0)
+            {
+                if (fieldFlag == 1)
+                {
+                    for(int j = 0; j < 6; j++)
+                    {
+                        int cardFlag = RandomValue(3);
+                        if(player.Deck[j] != 0)
+                        {
+                            if(cardFlag == 1)
+                            {
+                                if (player.Deck[j] == 1)
+                                {
+                                    player.Field[i] = 1;
+                                    if (player is Fire)
+                                    {
+                                        Player surtur = new Surtur();
+                                        player.Fields[i] = surtur;
+                                    }
+                                    else if (player is Water)
+                                    {
+                                        Player poseidon = new Poseidon();
+                                        player.Fields[i] = poseidon;
+                                    }
+                                    else if (player is Earth)
+                                    {
+                                        Player giant = new Giant();
+                                        player.Fields[i] = giant;
+                                    }
+                                    else
+                                    {
+                                        Player storm = new Storm();
+                                        player.Fields[i] = storm;
+                                    }
+                                    Console.WriteLine("ИИ успешно разместил карту!");
+                                    CellClearing(player, 1);
+                                    PrintSituation(player, enemy);
+                                }
+                                else if (player.Deck[j] == 2)
+                                {
+                                    player.Field[i] = 2;
+                                    if (player is Fire)
+                                    {
+                                        Player guardian = new Guardian();
+                                        player.Fields[i] = guardian;
+                                    }
+                                    else if (player is Water)
+                                    {
+                                        Player wall = new Wall();
+                                        player.Fields[i] = wall;
+                                    }
+                                    else if (player is Earth)
+                                    {
+                                        Player treeOfLife = new TreeOfLife();
+                                        player.Fields[i] = treeOfLife;
+                                    }
+                                    else
+                                    {
+                                        Player eagle = new Eagle();
+                                        player.Fields[i] = eagle;
+                                    }
+                                    Console.WriteLine("ИИ успешно разместил карту!");
+                                    CellClearing(player, 2);
+                                    PrintSituation(player, enemy);
+                                }
+                                else if (player.Deck[j] == 3)
+                                {
+                                    player.Field[i] = 3;
+                                    if (player is Fire)
+                                    {
+                                        Player knight = new Knight();
+                                        player.Fields[i] = knight;
+                                    }
+                                    else if (player is Water)
+                                    {
+                                        Player aquaman = new Aquaman();
+                                        player.Fields[i] = aquaman;
+                                    }
+                                    else if (player is Earth)
+                                    {
+                                        Player stoneBrothers = new StoneBrothers();
+                                        player.Fields[i] = stoneBrothers;
+                                    }
+                                    else
+                                    {
+                                        Player ninja = new Ninja();
+                                        player.Fields[i] = ninja;
+                                    }
+                                    Console.WriteLine("ИИ успешно разместил карту!");
+                                    CellClearing(player, 3);
+                                    PrintSituation(player, enemy);
+                                }
+                                else if (player.Deck[j] == 4)
+                                {
+                                    player.Field[i] = 4;
+                                    if (player is Fire)
+                                    {
+                                        Player fireSpirit = new FireSpirit();
+                                        player.Fields[i] = fireSpirit;
+                                    }
+                                    else if (player is Water)
+                                    {
+                                        Player waterSpirit = new WaterSpirit();
+                                        player.Fields[i] = waterSpirit;
+                                    }
+                                    else if (player is Earth)
+                                    {
+                                        Player earthSpirit = new EarthSpirit();
+                                        player.Fields[i] = earthSpirit;
+                                    }
+                                    else
+                                    {
+                                        Player airSpirit = new AirSpirit();
+                                        player.Fields[i] = airSpirit;
+                                    }
+                                    Console.WriteLine("ИИ успешно разместил карту!");
+                                    CellClearing(player, 4);
+                                    PrintSituation(player, enemy);
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+
+        int abilityFlag = RandomValue(3);
+        if (abilityFlag == 1)
+        {
+            Console.WriteLine("ИИ применил способность башни!");
+            player.Ability(player, enemy);
+        }
+        for(int i = 0; i < 4; i++)
+        {
+            if(enemy.Field[i] != 0)
+            {
+                if (enemy.Fields[i].HP <= 0) //Если удар оказался достаточно сильным
+                {
+                    enemy.Field[i] = 0; //Очищаем клетку противника
+                    enemy.Fields[i] = null;
+                }
+            }
+        }
+        Console.WriteLine("ИИ завершил свой ход. Начинается атака!");
+        ////////////////////////////////////////////////////////
+        //Процесс атаки
+        for (int i = 0; i < 4; i++) //Цикл проходится по клеткам обоих игроков
+        {
+            if (player.Field[i] != 0) //Если на клетке есть карта игрока
+            {
+                if (enemy.Field[i] != 0) //Если на клетке напротив есть карта противника
+                {
+                    player.Fields[i].Hit(enemy.Fields[i]); //Удар по карте противника
+                    if (enemy.Fields[i].HP <= 0) //Если удар оказался достаточно сильным
+                    {
+                        enemy.Field[i] = 0; //Очищаем клетку противника
+                        enemy.Fields[i] = null;
+                    }
+                }
+                else
+                {
+                    player.Fields[i].Hit(enemy);
+                }
+            }
+        }
+    }
+
+    private void CellClearing (Player player, int index)
+    {
+        for (int i = 0; i < 6; i++)
+        {
+            if (player.Deck[i] == index)
+            {
+                player.Deck[i] = 0;
+                break;
+            }
+        }
     }
 
     private void PrintSituation(Player player, Player enemy)

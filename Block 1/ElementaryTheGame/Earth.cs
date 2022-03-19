@@ -6,9 +6,15 @@
         Damage = 6;
     }
 
-    public override void Ability(Player enemy) //Абилка персонажа стихии Земли
+    public override void Ability(Player player, Player enemy) //Абилка персонажа стихии Земли
     {
-
+        for (int i = 0; i < 4; i++)
+        {
+            if (enemy.Field[i] != 0)
+            {
+                enemy.Fields[i].GetDamage(Damage);
+            }
+        }
     }
     public override void Hit(Player enemy) //Способность удара картами одной из стихий
     {                                      //Башней использоваться не может
@@ -39,7 +45,7 @@ public class Giant : Earth
     public Giant() : base()
     {
         HP = 23;
-        Damage = 15;
+        Damage = 17;
     }
 }
 

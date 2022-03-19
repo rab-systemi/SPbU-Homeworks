@@ -6,9 +6,10 @@
         Damage = 4;
     }
 
-    public override void Ability(Player enemy) //Абилка персонажа стихии Воздуха
+    public override void Ability(Player player, Player enemy) //Абилка персонажа стихии Воздуха
     {
-
+        player.HP += 6;
+        enemy.GetDamage(Damage);
     }
     public override void Hit(Player enemy) //Способность удара картами одной из стихий
     {                                      //Башней использоваться не может

@@ -7,7 +7,7 @@
         //ProbabilitySpace = { surtur, }
     }
 
-    public override void Ability(Player enemy) //Абилка персонажа стихии Огня
+    public override void Ability(Player player, Player enemy) //Абилка персонажа стихии Огня
     {
         enemy.GetDamage(Damage);
     }

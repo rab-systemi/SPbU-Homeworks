@@ -6,9 +6,16 @@
         Damage = 3;
     }
 
-    public override void Ability(Player enemy) //Абилка персонажа стихии Воды
+    public override void Ability(Player player, Player enemy) //Абилка персонажа стихии Воды
     {
-
+        enemy.GetDamage(Damage);
+        for(int i = 0; i < 4; i++)
+        {
+            if(enemy.Field[i] != 0)
+            {
+                enemy.Fields[i].GetDamage(Damage);
+            }
+        }
     }
     public override void Hit(Player enemy) //Способность удара картами одной из стихий
     {                                      //Башней использоваться не может
@@ -38,7 +45,7 @@ public class Poseidon : Water
 {
     public Poseidon() : base()
     {
-        HP = 14;
+        HP = 17;
         Damage = 23;
     }
 }
