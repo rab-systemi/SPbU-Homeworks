@@ -4,3 +4,6 @@ Player player2 = new Player(); //Создаем игрока 2
 Fight game = new Fight(); //Создаем игру
 
 game.Start(player1, player2); //Начинается игра
+
+Console.WriteLine("\n\n\nНажмите любую клавишу, чтобы выйти из игры");
+Console.ReadKey();
