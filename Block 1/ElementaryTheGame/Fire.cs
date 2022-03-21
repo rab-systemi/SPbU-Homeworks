@@ -1,10 +1,9 @@
-﻿public class Fire : Player
+﻿public class Fire : Player //Стихия Огня
 {
     public Fire()
     {
         HP = 100;
         Damage = 10;
-        //ProbabilitySpace = { surtur, }
     }
 
     public override void Ability(Player player, Player enemy) //Абилка персонажа стихии Огня
@@ -18,7 +17,7 @@
 }
 
 
-public class Knight : Fire
+public class Knight : Fire //Рыцарь
 {
     public Knight() : base()
     {
@@ -28,7 +27,7 @@ public class Knight : Fire
 }
 
 
-public class Guardian : Fire
+public class Guardian : Fire //Хранитель
 {
     public Guardian() : base()
     {
@@ -38,7 +37,7 @@ public class Guardian : Fire
 }
 
 
-public class Surtur : Fire
+public class Surtur : Fire //Суртур
 {
     public Surtur() : base()
     {
@@ -48,7 +47,7 @@ public class Surtur : Fire
 }
 
 
-public class FireSpirit : Fire
+public class FireSpirit : Fire //Дух Огня
 {
     public FireSpirit() : base()
     {

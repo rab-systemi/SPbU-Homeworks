@@ -1,4 +1,4 @@
-﻿public class Air : Player
+﻿public class Air : Player //Стихия воздуха
 {
     public Air()
     {
@@ -17,7 +17,7 @@
     }
 }
 
-public class Ninja : Air
+public class Ninja : Air //Ниндзя
 {
     public Ninja() : base()
     {
@@ -26,7 +26,7 @@ public class Ninja : Air
     }
 }
 
-public class Eagle : Air
+public class Eagle : Air //Орёл
 {
     public Eagle() : base()
     {
@@ -35,7 +35,7 @@ public class Eagle : Air
     }
 }
 
-public class Storm : Air
+public class Storm : Air //Шторм
 {
     public Storm() : base()
     {
@@ -44,7 +44,7 @@ public class Storm : Air
     }
 }
 
-public class AirSpirit : Air
+public class AirSpirit : Air //Дух Воздуха
 {
     public AirSpirit() : base()
     {

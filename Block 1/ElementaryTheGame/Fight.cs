@@ -1,6 +1,6 @@
 ﻿public class Fight
 {
-    public void Start(Player player1, Player player2)
+    public void Start(Player player1, Player player2) //Метод запуска игры
     {
         
         ConsoleKeyInfo gameMode;
@@ -63,5 +63,4 @@
             aivsai.RunAIvsAI(player1, player2);
         }
     }
-    
 }

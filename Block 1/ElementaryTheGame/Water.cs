@@ -1,4 +1,4 @@
-﻿public class Water : Player
+﻿public class Water : Player //Стихия Воды
 {
     public Water()
     {
@@ -23,7 +23,7 @@
     }
 }
 
-public class Aquaman : Water
+public class Aquaman : Water //Аквамен
 {
     public Aquaman() : base()
     {
@@ -32,7 +32,7 @@ public class Aquaman : Water
     }
 }
 
-public class Wall : Water
+public class Wall : Water //Водная стена
 {
     public Wall() : base()
     {
@@ -41,7 +41,7 @@ public class Wall : Water
     }
 }
 
-public class Poseidon : Water
+public class Poseidon : Water //Посейдон
 {
     public Poseidon() : base()
     {
@@ -50,7 +50,7 @@ public class Poseidon : Water
     }
 }
 
-public class WaterSpirit : Water
+public class WaterSpirit : Water //Дух Воды
 {
     public WaterSpirit() : base()
     {

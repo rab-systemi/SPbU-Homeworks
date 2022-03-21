@@ -1,13 +1,13 @@
 ﻿public class Player
 {
-    public int HP = 100;
-    public int Damage;
+    public int HP = 100; //ХП башни игроков
+    public int Damage; //Урон, наносимый башней или картами - определяется в других классах
     public int[] Field = new int[4]; //Поле игрока для карт, содержит 4 места
     public int[] Deck = new int[6]; //Рука игрока, максимум - 6 карт
     public Player[] Fields = new Player[4]; //Тоже поле игрока для карт, но в нем содержатся объекты типа Player
 
-    public virtual void Ability(Player player, Player enemy) { }
-    public virtual void Hit(Player enemy) { }
+    public virtual void Ability(Player player, Player enemy) { } //Метод способностей башен, для каждой стихии - своя
+    public virtual void Hit(Player enemy) { } //Метод удара карт (башнями использоваться не может)
     public void GetDamage(int damage) //Метод получения урона
     {
         HP -= damage;
@@ -21,22 +21,22 @@
             ConsoleKeyInfo Choice = Console.ReadKey();
             elementChoice = Choice;
 
-            if (Choice.Key == ConsoleKey.D1) //Пользователь нажал 1
+            if (Choice.Key == ConsoleKey.D1) //Пользователь нажал 1 - выбрал стихию Огня
             {
                 Console.WriteLine("\nВы выбрали стихию Огня!\n");
                 break;
             }
-            else if (Choice.Key == ConsoleKey.D2) //Пользователь нажал 2
+            else if (Choice.Key == ConsoleKey.D2) //Пользователь нажал 2 - выбрал стихию Воды
             {
                 Console.WriteLine("\nВы выбрали стихию Воды!\n");
                 break;
             }
-            else if (Choice.Key == ConsoleKey.D3) //Пользователь нажал 3
+            else if (Choice.Key == ConsoleKey.D3) //Пользователь нажал 3 - выбрал стихию Земли
             {
                 Console.WriteLine("\nВы выбрали стихию Земли!\n");
                 break;
             }
-            else if (Choice.Key == ConsoleKey.D4) //Пользователь нажал 4
+            else if (Choice.Key == ConsoleKey.D4) //Пользователь нажал 4 - выбрал стихию Воздуха
             {
                 Console.WriteLine("\nВы выбрали стихию Воздуха!\n");
                 break;
@@ -45,10 +45,10 @@
             {
                 Console.WriteLine("\nВведено недопустимое значение. " +
             "Попробуйте, пожалуйста, еще раз.");
-                continue;
+                continue; //Переходим на новую итерацию - снова ждем от пользователя нажатия клавиши
             }
         }
-        switch (elementChoice.Key)
+        switch (elementChoice.Key) //switch нажатой клавиши
         {
             case ConsoleKey.D1: //Если пользователь выбрал стихию Огня
                 return new Fire();
@@ -68,28 +68,28 @@
         }
     }
 
-    public Player ChooseElementAI()
+    public Player ChooseElementAI() //Метод выбора стихии ИИ
     {
-        int element = RandomValue(5);
-        switch (element)
+        int element = RandomValue(5); //Получаем случайное число от 1 до 4
+        switch (element) //switch случйного числа
         {
-            case 1:
+            case 1: //ИИ будет играть за стихию Огня
                 return new Fire();
                 break;
-            case 2:
+            case 2: //ИИ будет играть за стихию Воды
                 return new Water();
                 break;
-            case 3:
+            case 3: //ИИ будет играть за стихию Земли
                 return new Earth();
                 break;
-            case 4:
+            case 4: //ИИ будет играть за стихию Воздуха
                 return new Air();
                 break;
-            default:
+            default: //Сюда программа никогда не дойдет
                 return null;
         }
     }
-    public int RandomValue(int number) //Метод, случайно выбирающий число от 1 до number
+    public int RandomValue(int number) //Метод, случайно выбирающий число от 1 до number (невключительно)
     {
         Random random = new Random();
         int value = random.Next(1, number);
@@ -103,25 +103,25 @@
         {
             Random random = new Random();
             int randomCard = random.Next(1, 11);
-            int cardToDelete = random.Next(0, 6); //Переменная для замены карты в руке, если она полная
+            int cardToDelete = random.Next(0, 6); //Переменная для замены карты в руке, если она полная (карта с данным индексом заменяется)
             bool flag = false;
-            for (int j = 0; j < 6; j++)
+            for (int j = 0; j < 6; j++) //Проходимся по руке игрока
             {
                 if (Deck[j] == 0)
                 {
-                    if (randomCard == 1)
+                    if (randomCard == 1) //Вероятность выпадения - 10%
                     {
                         Deck[j] = 1; //Размещаем гиганта
                     }
-                    else if (randomCard == 2 || randomCard == 3)
+                    else if (randomCard == 2 || randomCard == 3) //Вероятность выпадения - 20%
                     {
                         Deck[j] = 2; //Размещаем доджера урона
                     }
-                    else if (randomCard <= 6)
+                    else if (randomCard <= 6) //Вероятность выпадения - 30%
                     {
                         Deck[j] = 3; //Размещаем дамагера
                     }
-                    else
+                    else //Вероятность выпадения - 40%
                     {
                         Deck[j] = 4; //Размещаем духа
                     }
@@ -153,10 +153,10 @@
     }
     public void Move(Player player, Player enemy) //Метод хода игрока
     {
-        player.GetCards(1);
+        player.GetCards(1); //Игрок получает карту в начале каждого хода
         Console.WriteLine("Вы получили карту в начале хода!\n\n");
 
-        PrintSituation(player, enemy);   
+        PrintSituation(player, enemy);
 
         Console.WriteLine("Вы можете выбрать карту в руке (нажмите 1,2,3 или 4), чтобы разместить ее на поле, и/или " +
             "использовать способность стихии (нажмите A).");
@@ -164,26 +164,26 @@
         Console.WriteLine("Чтобы завершить ход и начать атаку, нажмите ENTER!");
         
         
-        int abilityCount = 0;
+        int abilityCount = 0; //Индикатор применения абилки башни
         while (true) //Ждем от пользователя нажатия клавиши. Если он нажал что-то не то, ждем снова
         {
             Console.TreatControlCAsInput = true; //На всякий случай ограничиваем пользователя от нажатия CTRL+C
-            ConsoleKeyInfo press = Console.ReadKey();
+            ConsoleKeyInfo press = Console.ReadKey(); //Считываем клавишу
             
 
             if (press.Key == ConsoleKey.D1) //Пользователь нажал 1
             {
-                bool cardFlag = false;
-                for(int i = 0; i < 6; i++)
+                bool cardFlag = false; //Переменная наличия карты в руке
+                for(int i = 0; i < 6; i++) //Проходимся по руке игрока
                 {
-                    if (player.Deck[i] == 1)
+                    if (player.Deck[i] == 1) //Если в руке есть выбранная карта
                     {
-                        bool fieldFlag = false;
-                        for (int j = 0; j < 4; j++)
+                        bool fieldFlag = false; //Переменная свободы клеток на поле игрока
+                        for (int j = 0; j < 4; j++) //Проходимся по полю игрока
                         {
-                            if (player.Field[j] == 0)
+                            if (player.Field[j] == 0) //Если есть свободная клетка
                             {
-                                fieldFlag = true; //После этой строчки переходим к выбору поля
+                                fieldFlag = true; //Меняем флажок свободы клеток, переходим к выбору поля
                                 Console.WriteLine("\nВыберите клетку, на которую Вы хотите поместить выбранную карту (нажмите 1,2,3 или 4)");
                                 Console.WriteLine("Вы также можете нажать 0, чтобы вернуться назад.");
                                 while (true) //Ждем от пользователя нажатия клавиши. Если он нажал что-то не то, ждем снова
@@ -191,11 +191,11 @@
                                     Console.TreatControlCAsInput = true; //На всякий случай ограничиваем пользователя от нажатия CTRL+C
                                     ConsoleKeyInfo choice = Console.ReadKey();
 
-                                    if (choice.Key == ConsoleKey.D1)
+                                    if (choice.Key == ConsoleKey.D1) //Пользователь хочет разместить карту на клетку 1
                                     {
-                                        if (player.Field[0] == 0)
+                                        if (player.Field[0] == 0) //Если выбранная клетка свободна
                                         {
-                                            player.Field[0] = 1;
+                                            player.Field[0] = 1; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player surtur = new Surtur();
@@ -217,21 +217,21 @@
                                                 player.Fields[0] = storm;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 1);
+                                            CellClearing(player, 1); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D2)
+                                    else if (choice.Key == ConsoleKey.D2) //Пользователь хочет разместить карту на клетку 2
                                     {
-                                        if (player.Field[1] == 0)
+                                        if (player.Field[1] == 0) //Если выбранная клетка свободна
                                         {
-                                            player.Field[1] = 1;
+                                            player.Field[1] = 1; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player surtur = new Surtur();
@@ -253,21 +253,21 @@
                                                 player.Fields[1] = storm;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 1);
+                                            CellClearing(player, 1); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D3)
+                                    else if (choice.Key == ConsoleKey.D3) //Пользователь хочет разместить карту на клетку 3
                                     {
-                                        if (player.Field[2] == 0)
+                                        if (player.Field[2] == 0) //Если выбранная клетка свободна
                                         {
-                                            player.Field[2] = 1;
+                                            player.Field[2] = 1; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player surtur = new Surtur();
@@ -289,21 +289,21 @@
                                                 player.Fields[2] = storm;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 1);
+                                            CellClearing(player, 1); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D4)
+                                    else if (choice.Key == ConsoleKey.D4) //Пользователь хочет разместить карту на клетку 4
                                     {
-                                        if (player.Field[3] == 0)
+                                        if (player.Field[3] == 0) //Если выбранная клетка свободна
                                         {
-                                            player.Field[3] = 1;
+                                            player.Field[3] = 1; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player surtur = new Surtur();
@@ -325,20 +325,20 @@
                                                 player.Fields[3] = storm;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 1);
+                                            CellClearing(player, 1); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D0)
+                                    else if (choice.Key == ConsoleKey.D0) //Пользователь нажал 0
                                     {
                                         Console.WriteLine("\nВы вернулись на шаг назад.");
-                                        break;
+                                        break; //Выходим из цикла выбора клетки для размещения карты
                                     }
                                     else //Пользователь нажал что-то еще, а это недопустимо
                                     {
@@ -347,36 +347,36 @@
                                         continue;
                                     }
                                 }
-                                break;
+                                break; //Выходим из цикла прохода по полю игрока
                             }
                         }
-                        if (!fieldFlag)
+                        if (!fieldFlag) //Если все клетки поля игрока заняты
                         {
                             Console.WriteLine("\nВсе клетки поля заняты, поэтому Вы не можете разместить карту. " +
                                 "Введите другое значение.");
                         }
                         cardFlag = true;
-                        break;
+                        break; //Выходим из цикла прохода по руке игрока
                     }
                 }
-                if (!cardFlag)
+                if (!cardFlag) //Если выбранная карта не нашлась
                 {
                     Console.WriteLine("\nУ Вас в руке нет данной карты. Введите другое значение.");
                     continue;
                 }
-                continue;
+                continue; //Продолжаем ждать от пользователя нажатия клавиши
             }
             else if (press.Key == ConsoleKey.D2) //Пользователь нажал 2
             {
                 bool cardFlag = false;
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 6; i++) //Проходимся по руке игрока
                 {
-                    if (player.Deck[i] == 2)
+                    if (player.Deck[i] == 2) //Если в руке есть выбранная карта
                     {
                         bool fieldFlag = false;
-                        for (int j = 0; j < 4; j++)
+                        for (int j = 0; j < 4; j++) //Проходимся по полю игрока
                         {
-                            if (player.Field[j] == 0)
+                            if (player.Field[j] == 0) //Если нашлась свободная клетка
                             {
                                 fieldFlag = true;
                                 Console.WriteLine("\nВыберите клетку, на которую Вы хотите поместить выбранную карту (нажмите 1,2,3 или 4)");
@@ -386,11 +386,11 @@
                                     Console.TreatControlCAsInput = true; //На всякий случай ограничиваем пользователя от нажатия CTRL+C
                                     ConsoleKeyInfo choice = Console.ReadKey();
 
-                                    if (choice.Key == ConsoleKey.D1)
+                                    if (choice.Key == ConsoleKey.D1) //Пользователь хочет разместить карту на клетку 1
                                     {
-                                        if (player.Field[0] == 0)
+                                        if (player.Field[0] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[0] = 2;
+                                            player.Field[0] = 2; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player guardian = new Guardian();
@@ -412,21 +412,21 @@
                                                 player.Fields[0] = eagle;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 2);
+                                            CellClearing(player, 2); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D2)
+                                    else if (choice.Key == ConsoleKey.D2) //Пользователь хочет разместить карту на клетку 2
                                     {
-                                        if (player.Field[1] == 0)
+                                        if (player.Field[1] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[1] = 2;
+                                            player.Field[1] = 2; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player guardian = new Guardian();
@@ -448,21 +448,21 @@
                                                 player.Fields[1] = eagle;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 2);
+                                            CellClearing(player, 2); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D3)
+                                    else if (choice.Key == ConsoleKey.D3) //Пользователь хочет разместить карту на клетку 3
                                     {
-                                        if (player.Field[2] == 0)
+                                        if (player.Field[2] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[2] = 2;
+                                            player.Field[2] = 2; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player guardian = new Guardian();
@@ -484,21 +484,21 @@
                                                 player.Fields[2] = eagle;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 2);
+                                            CellClearing(player, 2); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D4)
+                                    else if (choice.Key == ConsoleKey.D4) //Пользователь хочет разместить карту на клетку 4
                                     {
-                                        if (player.Field[3] == 0)
+                                        if (player.Field[3] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[3] = 2;
+                                            player.Field[3] = 2; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player guardian = new Guardian();
@@ -520,20 +520,20 @@
                                                 player.Fields[3] = new Eagle();
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 2);
+                                            CellClearing(player, 2); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D0)
+                                    else if (choice.Key == ConsoleKey.D0) //Если пользователь нажал 0
                                     {
                                         Console.WriteLine("\nВы вернулись на шаг назад.");
-                                        break;
+                                        break; //Выходим из цикла выбора клетки для размещения карты
                                     }
                                     else //Пользователь нажал что-то еще, а это недопустимо
                                     {
@@ -542,36 +542,36 @@
                                         continue;
                                     }
                                 }
-                                break;
+                                break; //Выходим из цикла прохода по полю игрока
                             }
                         }
-                        if (!fieldFlag)
+                        if (!fieldFlag) //Если все клетки поля игрока заняты
                         {
                             Console.WriteLine("\nВсе клетки поля заняты, поэтому Вы не можете разместить карту. " +
                                 "Введите другое значение");
                         }
                         cardFlag = true;
-                        break;
+                        break; //Выходим из цикла прохода по руке игрока
                     }
                 }
-                if (!cardFlag)
+                if (!cardFlag) //Если выбранная карта не нашлась
                 {
                     Console.WriteLine("\nУ Вас в руке нет данной карты. Введите другое значение.");
                     continue;
                 }
-                continue;
+                continue; //Продолжаем ждать от пользователя нажатия клавиши
             }
             else if (press.Key == ConsoleKey.D3) //Пользователь нажал 3
             {
                 bool cardFlag = false;
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 6; i++) //Проходимся по руке игрока
                 {
-                    if (player.Deck[i] == 3)
+                    if (player.Deck[i] == 3) //Если в руке есть выбранная карта
                     {
                         bool fieldFlag = false;
-                        for (int j = 0; j < 4; j++)
+                        for (int j = 0; j < 4; j++) //Проходимся по полю игрока
                         {
-                            if (player.Field[j] == 0)
+                            if (player.Field[j] == 0) //Если нашлась свободная клетка
                             {
                                 fieldFlag = true;
                                 Console.WriteLine("\nВыберите клетку, на которую Вы хотите поместить выбранную карту (нажмите 1,2,3 или 4)");
@@ -581,11 +581,11 @@
                                     Console.TreatControlCAsInput = true; //На всякий случай ограничиваем пользователя от нажатия CTRL+C
                                     ConsoleKeyInfo choice = Console.ReadKey();
 
-                                    if (choice.Key == ConsoleKey.D1)
+                                    if (choice.Key == ConsoleKey.D1) //Пользователь хочет разместить карту на клетку 1
                                     {
-                                        if (player.Field[0] == 0)
+                                        if (player.Field[0] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[0] = 3;
+                                            player.Field[0] = 3; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player knight = new Knight();
@@ -607,21 +607,21 @@
                                                 player.Fields[0] = ninja;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 3);
+                                            CellClearing(player, 3); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D2)
+                                    else if (choice.Key == ConsoleKey.D2) //Пользователь хочет разместить карту на клетку 2
                                     {
-                                        if (player.Field[1] == 0)
+                                        if (player.Field[1] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[1] = 3;
+                                            player.Field[1] = 3; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player knight = new Knight();
@@ -643,21 +643,21 @@
                                                 player.Fields[1] = ninja;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 3);
+                                            CellClearing(player, 3); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D3)
+                                    else if (choice.Key == ConsoleKey.D3) //Пользователь хочет разместить карту на клетку 3
                                     {
-                                        if (player.Field[2] == 0)
+                                        if (player.Field[2] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[2] = 3;
+                                            player.Field[2] = 3; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player knight = new Knight();
@@ -679,21 +679,21 @@
                                                 player.Fields[2] = ninja;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 3);
+                                            CellClearing(player, 3); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D4)
+                                    else if (choice.Key == ConsoleKey.D4) //Пользователь хочет разместить карту на клетку 4
                                     {
-                                        if (player.Field[3] == 0)
+                                        if (player.Field[3] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[3] = 3;
+                                            player.Field[3] = 3; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player knight = new Knight();
@@ -715,20 +715,20 @@
                                                 player.Fields[3] = ninja;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 3);
+                                            CellClearing(player, 3); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D0)
+                                    else if (choice.Key == ConsoleKey.D0) //Если пользователь нажал 0
                                     {
                                         Console.WriteLine("\nВы вернулись на шаг назад.");
-                                        break;
+                                        break; //Выходим из цикла выбора клетки для размещения карты
                                     }
                                     else //Пользователь нажал что-то еще, а это недопустимо
                                     {
@@ -737,36 +737,36 @@
                                         continue;
                                     }
                                 }
-                                break;
+                                break; //Выходим из цикла прохода по полю игрока
                             }
                         }
-                        if (!fieldFlag)
+                        if (!fieldFlag) //Если все клетки поля игрока заняты
                         {
                             Console.WriteLine("\nВсе клетки поля заняты, поэтому Вы не можете разместить карту. " +
                                 "Введите другое значение");
                         }
                         cardFlag = true;
-                        break; ;
+                        break; //Выходим из цикла прохода по руке игрока
                     }
                 }
-                if (!cardFlag)
+                if (!cardFlag) //Если выбранная карта не нашлась
                 {
                     Console.WriteLine("\nУ Вас в руке нет данной карты. Введите другое значение.");
                     continue;
                 }
-                continue;
+                continue; //Продолжаем ждать от пользователя нажатия клавиши
             }
             else if (press.Key == ConsoleKey.D4) //Пользователь нажал 4
             {
                 bool cardFlag = false;
-                for (int i = 0; i < 6; i++)
+                for (int i = 0; i < 6; i++) //Проходимся по руке игрока
                 {
-                    if (player.Deck[i] == 4)
+                    if (player.Deck[i] == 4) //Если в руке есть выбранная карта
                     {
                         bool fieldFlag = false;
-                        for (int j = 0; j < 4; j++)
+                        for (int j = 0; j < 4; j++) //Проходимся по полю игрока
                         {
-                            if (player.Field[j] == 0)
+                            if (player.Field[j] == 0) //Если нашлась свободная клетка
                             {
                                 fieldFlag = true;
                                 Console.WriteLine("\nВыберите клетку, на которую Вы хотите поместить выбранную карту (нажмите 1,2,3 или 4)");
@@ -775,11 +775,11 @@
                                 {
                                     Console.TreatControlCAsInput = true; //На всякий случай ограничиваем пользователя от нажатия CTRL+C
                                     ConsoleKeyInfo choice = Console.ReadKey();
-                                    if (choice.Key == ConsoleKey.D1)
+                                    if (choice.Key == ConsoleKey.D1) //Пользователь хочет разместить карту на клетку 1
                                     {
-                                        if (player.Field[0] == 0)
+                                        if (player.Field[0] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[0] = 4;
+                                            player.Field[0] = 4; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player fireSpirit = new FireSpirit();
@@ -801,21 +801,21 @@
                                                 player.Fields[0] = airSpirit;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 4);
+                                            CellClearing(player, 4); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D2)
+                                    else if (choice.Key == ConsoleKey.D2) //Пользователь хочет разместить карту на клетку 2
                                     {
-                                        if (player.Field[1] == 0)
+                                        if (player.Field[1] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[1] = 4;
+                                            player.Field[1] = 4; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player fireSpirit = new FireSpirit();
@@ -837,21 +837,21 @@
                                                 player.Fields[1] = airSpirit;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 4);
+                                            CellClearing(player, 4); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D3)
+                                    else if (choice.Key == ConsoleKey.D3) //Пользователь хочет разместить карту на клетку 3
                                     {
-                                        if (player.Field[2] == 0)
+                                        if (player.Field[2] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[2] = 4;
+                                            player.Field[2] = 4; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player fireSpirit = new FireSpirit();
@@ -873,21 +873,21 @@
                                                 player.Fields[2] = airSpirit;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 4);
+                                            CellClearing(player, 4); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D4)
+                                    else if (choice.Key == ConsoleKey.D4) //Пользователь хочет разместить карту на клетку 4
                                     {
-                                        if (player.Field[3] == 0)
+                                        if (player.Field[3] == 0) //Если выбранная клетка свободная
                                         {
-                                            player.Field[3] = 4;
+                                            player.Field[3] = 4; //Размещаем карту, далее - присваиваем карту с учетом стихии игрока
                                             if (player is Fire)
                                             {
                                                 Player fireSpirit = new FireSpirit();
@@ -909,20 +909,20 @@
                                                 player.Fields[3] = airSpirit;
                                             }
                                             Console.WriteLine("\nВы успешно разместили карту!");
-                                            CellClearing(player, 4);
+                                            CellClearing(player, 4); //Очищаем ячейку с картой в руке игрока
                                             PrintSituation(player, enemy);
-                                            break;
+                                            break; //Выходим из цикла выбора клетки для размещения карты
                                         }
-                                        else
+                                        else //Если выбранная клетка занята
                                         {
                                             Console.WriteLine("\nДанная клетка занята. Введите другое значение либо нажмите 0 для возврата.");
                                             continue;
                                         }
                                     }
-                                    else if (choice.Key == ConsoleKey.D0)
+                                    else if (choice.Key == ConsoleKey.D0) //Если пользователь нажал 0
                                     {
                                         Console.WriteLine("\nВы вернулись на шаг назад.");
-                                        break;
+                                        break; //Выходим из цикла выбора клетки для размещения карты
                                     }
                                     else //Пользователь нажал что-то еще, а это недопустимо
                                     {
@@ -931,34 +931,34 @@
                                         continue;
                                     }
                                 }
-                                break;
+                                break; //Выходим из цикла прохода по полю игрока
                             }
                         }
-                        if (!fieldFlag)
+                        if (!fieldFlag) //Если все клетки поля игрока заняты
                         {
                             Console.WriteLine("\nВсе клетки поля заняты, поэтому Вы не можете разместить карту. " +
                                 "Введите другое значение");
                         }
                         cardFlag = true;
-                        break;
+                        break; //Выходим из цикла прохода по руке игрока
                     }
                 }
-                if (!cardFlag)
+                if (!cardFlag) //Если выбранная карта не нашлась
                 {
                     Console.WriteLine("\nУ Вас в руке нет данной карты. Введите другое значение.");
                     continue;
                 }
-                continue;
+                continue; //Продолжаем ждать от пользователя нажатия клавиши
             }
             else if (press.Key == ConsoleKey.A) //Пользователь нажал A
             {
-                if (abilityCount == 0)
+                if (abilityCount == 0) //Если A еще ни разу не было нажато
                 {
                     Console.WriteLine("\nВы применили способность башни!");
-                    player.Ability(player, enemy);
-                    for (int i = 0; i < 4; i++)
+                    player.Ability(player, enemy); //Применение способности
+                    for (int i = 0; i < 4; i++) //Проходимся по полю противника, чтобы очистить поле от карт, оставшихся без ХП
                     {
-                        if (enemy.Field[i] != 0)
+                        if (enemy.Field[i] != 0) //Если клетка не пуста
                         {
                             if (enemy.Fields[i].HP <= 0) //Если удар оказался достаточно сильным
                             {
@@ -967,16 +967,17 @@
                             }
                         }
                     }
-                    abilityCount++;
+                    abilityCount++; //Прибавляем 1, чтобы остлеживать применение абилки башни при следующих нажатиях A
+                    PrintSituation(player, enemy);
                     continue;
                 }
-                else
+                else //Если абилка башни уже применялась на этом ходу
                 {
                     Console.WriteLine("\nВы уже применили спсобность башни на этом ходу. Введите другое значение.");
                     continue;
                 }
             }
-            else if (press.Key == ConsoleKey.I) //Пользователь нажал ENTER
+            else if (press.Key == ConsoleKey.I) //Пользователь нажал I
             {
                 Console.WriteLine("\n\n\tСтихия Огня: Рыцарь(7 HP,14 урона), Хранитель(14 HP,3 урона), Суртур(20 HP,20 урона), Дух Огня(3 HP, 3 урона)");
                 Console.WriteLine("Способность стихии Огня: запускает Fireball по башне противника, нанося по ней 10 урона.");
@@ -1018,34 +1019,34 @@
                         enemy.Fields[i] = null; 
                     }
                 }
-                else
+                else //Если на клетке напротив нет карты противника
                 {
-                    player.Fields[i].Hit(enemy);
+                    player.Fields[i].Hit(enemy); //Бьем по башне противника
                 }
             }
         }
     }
 
-    public void MoveAI(Player player, Player enemy)
+    public void MoveAI(Player player, Player enemy) //Метод хода ИИ
     {
-        player.GetCards(1);
+        player.GetCards(1); //ИИ получает карту в начале хода
         Console.WriteLine("ИИ получил карту в начале хода!\n\n");
 
         PrintSituation(player, enemy);
 
-        for (int i = 0; i < 4; i++)
+        for (int i = 0; i < 4; i++) //Проходимся по полю игрока (ИИ)
         {
-            int fieldFlag = RandomValue(3);
-            if (player.Field[i] == 0)
+            int fieldFlag = RandomValue(3); //Случайное число (1 или 2): 1 - заполнить клетку, 2 - пропустить клетку
+            if (player.Field[i] == 0) //Если клетка пуста
             {
-                if (fieldFlag == 1)
+                if (fieldFlag == 1) //Выпала 1 - заполняем клетку
                 {
-                    for(int j = 0; j < 6; j++)
+                    for(int j = 0; j < 6; j++) //Проходимся по руке игрока (ИИ)
                     {
-                        int cardFlag = RandomValue(3);
-                        if(player.Deck[j] != 0)
+                        int cardFlag = RandomValue(3); //Случайное число (1 или 2): 1 - выложить карту, 2 - пропустить карту
+                        if (player.Deck[j] != 0) //Если ячейка с картой не пуста
                         {
-                            if(cardFlag == 1)
+                            if(cardFlag == 1) //Выпала 1 - выкладываем карту в зависимости от стихии игрока (ИИ)
                             {
                                 if (player.Deck[j] == 1)
                                 {
@@ -1159,19 +1160,18 @@
                         }
                     }
                 }
-
             }
         }
 
-        int abilityFlag = RandomValue(3);
-        if (abilityFlag == 1)
+        int abilityFlag = RandomValue(3); //Случайное число (1 или 2): 1 - применить абилку башни, 2 - не применять абилку
+        if (abilityFlag == 1) //Выпала 1 - применяем абилку башни
         {
             Console.WriteLine("ИИ применил способность башни!");
-            player.Ability(player, enemy);
+            player.Ability(player, enemy); //Применяем абилку
         }
-        for(int i = 0; i < 4; i++)
+        for(int i = 0; i < 4; i++) //Проходимся по полю противника, чтобы очистить поле от карт, оставшихся без ХП
         {
-            if(enemy.Field[i] != 0)
+            if(enemy.Field[i] != 0) //Если клетка не пуста
             {
                 if (enemy.Fields[i].HP <= 0) //Если удар оказался достаточно сильным
                 {
@@ -1196,35 +1196,35 @@
                         enemy.Fields[i] = null;
                     }
                 }
-                else
+                else //Если на клетке напротив нет карты противника
                 {
-                    player.Fields[i].Hit(enemy);
+                    player.Fields[i].Hit(enemy); //Бьем по башне противника
                 }
             }
         }
     }
 
-    private void CellClearing (Player player, int index)
+    private void CellClearing (Player player, int index) //Метод очистки ячейки в руке игрока (убирается карта вида index (1,2,3,4))
     {
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++) //Проходимся по руке игрока
         {
-            if (player.Deck[i] == index)
+            if (player.Deck[i] == index) //Нашли карту вида index
             {
-                player.Deck[i] = 0;
+                player.Deck[i] = 0; //Заменяем на 0
                 break;
             }
         }
     }
 
-    private void PrintSituation(Player player, Player enemy)
+    private void PrintSituation(Player player, Player enemy) //Печать ситуации на поле (ХП башни противника, поле противника, поле игрока, ХП башни игрока, карты в руке игрока)
     {
 
-        Console.WriteLine($"Башня противника: {enemy.HP} HP\n");    
+        Console.WriteLine($"Башня противника: {enemy.HP} HP\n"); //Печатаем ХП башни противника
         
         
-        for(int i = 0; i < 4; i++) //Поменять объект, переменные с ХП и персонажей
+        for(int i = 0; i < 4; i++) //Проходимся по полю противника
         {
-            if (enemy.Field[i] == 1) //Поменять переменные с ХП и персонажей
+            if (enemy.Field[i] == 1) //Встретили карту 1 - печатаем её ХП и урон в зависимости от стихии противника
             {
                 if (enemy is Fire)
                 {
@@ -1243,7 +1243,7 @@
                     Console.Write($"\tШторм:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
             }
-            else if (enemy.Field[i] == 2) //Поменять условие, переменные с ХП и персонажей
+            else if (enemy.Field[i] == 2) //Встретили карту 2 - печатаем её ХП и урон в зависимости от стихии противника
             {
                 if (enemy is Fire)
                 {
@@ -1262,7 +1262,7 @@
                     Console.Write($"\tОрёл:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
             }
-            else if (enemy.Field[i] == 3) //Поменять условие, переменные с ХП и персонажей
+            else if (enemy.Field[i] == 3) //Встретили карту 3 - печатаем её ХП и урон в зависимости от стихии противника
             {
                 if (enemy is Fire)
                 {
@@ -1281,7 +1281,7 @@
                     Console.Write($"\tНиндзя:{enemy.Fields[i].HP} HP,{enemy.Fields[i].Damage} урона");
                 }
             }
-            else if (enemy.Field[i] == 4) //Поменять условие, переменные с ХП и персонажей
+            else if (enemy.Field[i] == 4) //Встретили карту 4 - печатаем её ХП и урон в зависимости от стихии противника
             {
                 if (enemy is Fire)
                 {
@@ -1308,9 +1308,9 @@
 
         Console.WriteLine("\n\n");
 
-        for (int i = 0; i < 4; i++) //Поменять объект, переменные с ХП и персонажей
+        for (int i = 0; i < 4; i++) //Проходимся по полю игрока
         {
-            if (player.Field[i] == 1) //Поменять переменные с ХП и персонажей
+            if (player.Field[i] == 1) //Встретили карту 1 - печатаем её ХП и урон в зависимости от стихии игрока
             {
                 if (player is Fire)
                 {
@@ -1329,7 +1329,7 @@
                     Console.Write($"\tШторм:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
             }
-            else if (player.Field[i] == 2) //Поменять условие, переменные с ХП и персонажей
+            else if (player.Field[i] == 2) //Встретили карту 2 - печатаем её ХП и урон в зависимости от стихии игрока
             {
                 if (player is Fire)
                 {
@@ -1348,7 +1348,7 @@
                     Console.Write($"\tОрёл:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
             }
-            else if (player.Field[i] == 3) //Поменять условие, переменные с ХП и персонажей
+            else if (player.Field[i] == 3) //Встретили карту 3 - печатаем её ХП и урон в зависимости от стихии игрока
             {
                 if (player is Fire)
                 {
@@ -1367,7 +1367,7 @@
                     Console.Write($"\tНиндзя:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
             }
-            else if (player.Field[i] == 4) //Поменять условие, переменные с ХП и персонажей
+            else if (player.Field[i] == 4) //Встретили карту 4 - печатаем её ХП и урон в зависимости от стихии игрока
             {
                 if (player is Fire)
                 {
@@ -1386,19 +1386,19 @@
                     Console.Write($"\tДух Воздуха:{player.Fields[i].HP} HP,{player.Fields[i].Damage} урона");
                 }
             }
-            else
+            else //На клетке нет карты
             {
                 Console.Write("\tПусто");
             }
         }
 
         Console.WriteLine("\n");
-        Console.WriteLine($"Ваша башня: {player.HP} HP\n");
+        Console.WriteLine($"Ваша башня: {player.HP} HP\n"); //Печатаем ХП башни игрока
         Console.WriteLine("Ваша колода:\n");
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 0; i < 6; i++) //Проходимся по руке игрока
         {
-            if (player.Deck[i] == 1)
+            if (player.Deck[i] == 1) //Встретили карту 1 - печатаем её название в зависимости от стихии игрока
             {
                 if (player is Fire) 
                 {
@@ -1417,7 +1417,7 @@
                     Console.Write("\t1.Шторм");
                 }
             }
-            else if (player.Deck[i] == 2)
+            else if (player.Deck[i] == 2) //Встретили карту 2 - печатаем её название в зависимости от стихии игрока
             {
                 if (player is Fire)
                 {
@@ -1436,7 +1436,7 @@
                     Console.Write("\t2.Орёл");
                 }
             }
-            else if (player.Deck[i] == 3)
+            else if (player.Deck[i] == 3) //Встретили карту 3 - печатаем её название в зависимости от стихии игрока
             {
                 if (player is Fire)
                 {
@@ -1455,7 +1455,7 @@
                     Console.Write("\t3.Ниндзя");
                 }
             }
-            else if (player.Deck[i] == 4)
+            else if (player.Deck[i] == 4) //Встретили карту 4 - печатаем её название в зависимости от стихии игрока
             {
                 if (player is Fire)
                 {
@@ -1474,7 +1474,7 @@
                     Console.Write("\t4.Дух Воздуха");
                 }
             }
-            else
+            else //В ячейке нет карты
             {
                 Console.Write("\tПусто");
             }

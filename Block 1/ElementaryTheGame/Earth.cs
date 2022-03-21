@@ -1,4 +1,4 @@
-﻿public class Earth : Player
+﻿public class Earth : Player //Стихия Земли
 {
     public Earth()
     {
@@ -22,7 +22,7 @@
     }
 }
 
-public class StoneBrothers : Earth
+public class StoneBrothers : Earth //Каменные братья
 {
     public StoneBrothers() : base()
     {
@@ -31,7 +31,7 @@ public class StoneBrothers : Earth
     }
 }
 
-public class TreeOfLife : Earth
+public class TreeOfLife : Earth //Древо Жизни
 {
     public TreeOfLife() : base()
     {
@@ -40,7 +40,7 @@ public class TreeOfLife : Earth
     }
 }
 
-public class Giant : Earth
+public class Giant : Earth //Гигант
 {
     public Giant() : base()
     {
@@ -49,7 +49,7 @@ public class Giant : Earth
     }
 }
 
-public class EarthSpirit : Earth
+public class EarthSpirit : Earth //Дух Земли
 {
     public EarthSpirit() : base()
     {
