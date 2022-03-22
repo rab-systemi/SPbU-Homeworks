@@ -2,10 +2,10 @@
 {
     public void RunAIvsAI(Player player, Player enemy) //Метод, запускающий битву в режиме ИИ против ИИ
     {
-        Console.WriteLine("Игрок 1 выберает стихию!\n");
+        Console.WriteLine("Игрок 1 выбирает стихию!\n");
         var playerNew = player.ChooseElementAI(); //ИИ 1 выбирает стихию
 
-        Console.WriteLine("Игрок 2 выберает стихию!\n");
+        Console.WriteLine("Игрок 2 выбирает стихию!\n");
         var enemyNew = enemy.ChooseElementAI(); //ИИ 2 выбирает стихию
 
         Random Turn = new Random(); //Случайно выбираем номер игрока, делающего первый ход
