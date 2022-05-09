@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Acer\\Desktop\\C# programs\\CircularList\\CircularList.csproj": {}
+    "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\CircularList.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Acer\\Desktop\\C# programs\\CircularList\\CircularList.csproj": {
+    "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\CircularList.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Acer\\Desktop\\C# programs\\CircularList\\CircularList.csproj",
+        "projectUniqueName": "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\CircularList.csproj",
         "projectName": "CircularList",
-        "projectPath": "C:\\Users\\Acer\\Desktop\\C# programs\\CircularList\\CircularList.csproj",
+        "projectPath": "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\CircularList.csproj",
         "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Acer\\Desktop\\C# programs\\CircularList\\obj\\",
+        "outputPath": "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
