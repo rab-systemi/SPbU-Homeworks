@@ -263,6 +263,13 @@ namespace CircularList
             return this.GetType();
         }
 
+        //MemberwiseClone() – Создает неполную копию текущего объекта Object. (Унаследовано от Object)
+        public CircleList<T> MyMemberwiseClone()
+        {
+            var list = (object)this;
+            return (CircleList<T>)list;
+        }
+
         //Remove(CircleListNode<T>) – Удаляет заданный узел из объекта CircleList<T>
         public bool Remove(CircleListNode<T> node)
         {

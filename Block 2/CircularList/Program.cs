@@ -44,6 +44,9 @@ namespace CircularList
             Console.WriteLine(list.Count);
 
             Console.WriteLine(list.Any());
+
+            Index index = new Index(2, false);
+            Console.WriteLine(list.ElementAt(index));
         }
     }
 }

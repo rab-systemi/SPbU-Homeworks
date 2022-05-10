@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\CircularList.csproj": {}
+    "C:\\Users\\Professional\\Documents\\GitHub\\SPbU-Homeworks\\Block 2\\CircularList\\CircularList.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\CircularList.csproj": {
+    "C:\\Users\\Professional\\Documents\\GitHub\\SPbU-Homeworks\\Block 2\\CircularList\\CircularList.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\CircularList.csproj",
+        "projectUniqueName": "C:\\Users\\Professional\\Documents\\GitHub\\SPbU-Homeworks\\Block 2\\CircularList\\CircularList.csproj",
         "projectName": "CircularList",
-        "projectPath": "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\CircularList.csproj",
-        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Acer\\Desktop\\SpBU\\C# programs\\CircularList\\obj\\",
+        "projectPath": "C:\\Users\\Professional\\Documents\\GitHub\\SPbU-Homeworks\\Block 2\\CircularList\\CircularList.csproj",
+        "packagesPath": "C:\\Users\\Professional\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Professional\\Documents\\GitHub\\SPbU-Homeworks\\Block 2\\CircularList\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\Professional\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -54,7 +58,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.202\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
         }
       }
     }
