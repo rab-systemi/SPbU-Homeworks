@@ -106,6 +106,179 @@ namespace CircularList
             }
         }
 
+        //ElementAtOrDefault<TSource>(IEnumerable<TSource>, Int32) – Возвращает элемент последовательности
+        //по указанному индексу  или значение по умолчанию, если индекс вне допустимого диапазона
+        public static TSource ElementAtOrDefault<TSource>(this IEnumerable<TSource> list, int index)
+        {
+            int counter = 0;
+            foreach (var item in list)
+            {
+                if (counter == index)
+                {
+                    return item;
+                }
+                counter++;
+            }
+
+            return default;
+        }
+
+        //ElementAtOrDefault<TSource>(IEnumerable<TSource>, Index) – Возвращает элемент последовательности
+        //по указанному индексу  или значение по умолчанию, если индекс вне допустимого диапазона
+        public static TSource ElementAtOrDefault<TSource>(this IEnumerable<TSource> list, Index index)
+        {
+            if (list.Count() >= index.Value)
+            {
+                return default;
+            }
+            else
+            {
+                return list.ElementAt(index);
+            }
+        }
+
+        //First<TSource>(IEnumerable<TSource>) – Возвращает первый элемент последовательности
+        public static TSource First<TSource>(this IEnumerable<TSource> list)
+        {
+            foreach (var item in list)
+            {
+                return item;
+            }
+            throw new ArgumentNullException();
+        }
+
+        //FirstOrDefault<TSource>(IEnumerable<TSource>) – Возвращает первый элемент последовательности
+        //или значение по умолчанию, если последовательность не содержит элементов
+        public static TSource FirstOrDefault<TSource>(this IEnumerable<TSource> list)
+        {
+            foreach (var item in list)
+            {
+                return item;
+            }
+            return default;
+        }
+
+        //Last<TSource>(IEnumerable<TSource>) – Возвращает последний элемент последовательности
+        public static TSource Last<TSource>(this IEnumerable<TSource> list)
+        {
+            int count = 0;
+            TSource lastItem = default;
+
+            foreach (var item in list)
+            {
+                lastItem = item;
+            }
+
+            if (count == 0)
+            {
+                throw new ArgumentNullException();
+            }
+
+            return lastItem;
+        }
+
+        //LastOrDefault<TSource>(IEnumerable<TSource>) – Возвращает последний элемент последовательности
+        //или значение по умолчанию, если последовательность не содержит элементов
+        public static TSource LastOrDefault<TSource>(this IEnumerable<TSource> list)
+        {
+            int count = 0;
+            TSource lastItem = default;
+
+            foreach (var item in list)
+            {
+                lastItem = item;
+            }
+
+            if (count == 0)
+            {
+                return default;
+            }
+
+            return lastItem;
+        }
+
+        //Max<TSource>(IEnumerable<TSource>) – Возвращает максимальное значение, содержащееся в универсальной последовательности
+        public static TSource Max<TSource>(this IEnumerable<TSource> list) where TSource : IComparable
+        {
+            if (list.Count() == 0)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var maxItem = list.First();
+            foreach (var item in list)
+            {
+                if (item.CompareTo(maxItem) > 0)
+                {
+                    maxItem = item;
+                }
+            }
+
+            return maxItem;
+        }
+
+        //Min<TSource>(IEnumerable<TSource>) – Возвращает минимальное значение, содержащееся в универсальной последовательности
+        public static TSource Min<TSource>(this IEnumerable<TSource> list) where TSource : IComparable
+        {
+            if (list.Count() == 0)
+            {
+                throw new ArgumentNullException();
+            }
+
+            var minItem = list.First();
+            foreach (var item in list)
+            {
+                if (item.CompareTo(minItem) < 0)
+                {
+                    minItem = item;
+                }
+            }
+
+            return minItem;
+        }
+
+        //OrderBy<TSource,TKey>(IEnumerable<TSource>, Func<TSource,TKey>) - 
+        //Сортирует элементы последовательности в порядке возрастания ключа
+        public static IEnumerable<TSource> OrderBy<TSource, TKey>(this IEnumerable<TSource> list, Func<TSource, TKey> f)
+        {
+            if (list == null || f == null)
+            {
+                throw new ArgumentNullException();
+            }
+            var items = list.ToArray();
+            var keys = items.Select(f).ToArray();
+            Array.Sort(keys, items);
+            foreach (var item in items)
+            {
+                yield return item;
+            }
+        }
+
+        //OrderByDescending<TSource,TKey>(IEnumerable<TSource>, Func<TSource,TKey>) –
+        //Сортирует элементы последовательности в порядке убывания ключа
+        public static IEnumerable<TSource> OrederByDescending<TSource, TKey>(this IEnumerable<TSource> list, Func<TSource, TKey> f)
+        {
+            if (list == null || f == null)
+            {
+                throw new ArgumentNullException();
+            }
+            var items = list.ToArray();
+            var keys = items.Select(f).Reverse().ToArray();
+            Array.Sort(keys, items);
+            foreach (var item in items)
+            {
+                yield return item;
+            }
+        }
+
+        //Prepend<TSource>(IEnumerable<TSource>, TSource) – Добавляет значение в начало последовательности
+        public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> list, TSource data)
+        {
+            var newList = ((CircleList<TSource>)list).MyMemberwiseClone();
+            newList.AddFirst(data);
+            return newList;
+        }
+
         //Reverse<TSource>(IEnumerable<TSource>) – Изменяет порядок элементов последовательности на противоположный
         public static IEnumerable<TSource> Reverse<TSource>(this IEnumerable<TSource> list)
         {

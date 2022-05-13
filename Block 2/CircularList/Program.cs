@@ -46,7 +46,22 @@ namespace CircularList
             Console.WriteLine(list.Any());
 
             Index index = new Index(2, false);
-            Console.WriteLine(list.ElementAt(index));
+            //Console.WriteLine(list.ElementAt(index));
+
+            CircleList<int> intList = new CircleList<int>();
+            intList.AddLast(0);
+            intList.AddLast(3);
+            intList.AddLast(5);
+            intList.AddLast(1);
+            intList.AddLast(2);
+            intList.AddLast(4);
+
+            var sortedList = intList.OrderByDescending(x => x);
+
+            foreach (var item in sortedList)
+            {
+                Console.WriteLine(item);
+            }
         }
     }
 }
