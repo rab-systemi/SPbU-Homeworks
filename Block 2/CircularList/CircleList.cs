@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CircularList
 {
-    internal class CircleList<T> : IEnumerable<T>
+    internal class CircleList<T> : IEnumerable<T> where T : IComparable
     {
         public CircleListNode<T> First;
         public CircleListNode<T> Last;
@@ -17,7 +17,7 @@ namespace CircularList
 
         public CircleList() { }
         
-        public CircleList(IEnumerable<T> list) //TO FINISH///////////////////////////////
+        public CircleList(IEnumerable<T> list)
         {
             count = 0;
             foreach (var item in list)
@@ -203,7 +203,7 @@ namespace CircularList
             var current = list.First;
             foreach (var item in this)
             {
-                if (!(current.Data.Equals(item)))
+                if (current.Data.CompareTo(item) != 0)
                 {
                     return false;
                 }
@@ -386,10 +386,6 @@ namespace CircularList
                 count--;
             }
         }
-
-
-
-
 
         IEnumerator IEnumerable.GetEnumerator()
         {

@@ -25,7 +25,7 @@ namespace CircularList
 
         //Append<TSource>(IEnumerable<TSource>, TSource) – Добавляет
         //значение в конец последовательности
-        public static IEnumerable<TSource> Append<TSource>(this IEnumerable<TSource> list, TSource data) //MAY BE TO FINISH
+        public static IEnumerable<TSource> Append<TSource>(this IEnumerable<TSource> list, TSource data) where TSource : IComparable
         {
             var newList = ((CircleList<TSource>)list).MyMemberwiseClone();
             newList.AddLast(data);
@@ -33,16 +33,32 @@ namespace CircularList
         }
 
         //Concat<TSource>(IEnumerable<TSource>, IEnumerable<TSource>) – Объединяет две последовательности
-        public static void Concat<TSource>(this IEnumerable<TSource> list1, IEnumerable<TSource> list2) //TO FINISH
+        public static IEnumerable<TSource> Concat<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second)
         {
-
+            if (first == null || second == null)
+            {
+                throw new ArgumentNullException();
+            }
+            IEnumerable<TSource> newList = first;
+            foreach (var item in second)
+            {
+                newList.Append(item);
+            }
+            return newList;
         }
 
         //Contains<TSource>(IEnumerable<TSource>, TSource) – Определяет, содержится ли указанный элемент
-        //впоследовательности,используя компаратор проверки на равенство по умолчанию
-        public static void Contains<TSource>(this IEnumerable<TSource> list, TSource data) //TO FINISH
+        //в последовательности,используя компаратор проверки на равенство по умолчанию
+        public static bool Contains<TSource>(this IEnumerable<TSource> list, TSource data) where TSource : IComparable
         {
-
+            foreach (var item in list)
+            {
+                if (item.CompareTo(data) == 0)
+                {
+                    return true;    
+                }
+            }
+            return false;
         }
 
         //Count<TSource>(IEnumerable<TSource>) – Возвращает количество элементов в последовательности
@@ -239,6 +255,7 @@ namespace CircularList
 
         //OrderBy<TSource,TKey>(IEnumerable<TSource>, Func<TSource,TKey>) - 
         //Сортирует элементы последовательности в порядке возрастания ключа
+        //Источник: https://stackoverflow.com/questions/13079218/how-to-implement-linq-orderby-method
         public static IEnumerable<TSource> OrderBy<TSource, TKey>(this IEnumerable<TSource> list, Func<TSource, TKey> f)
         {
             if (list == null || f == null)
@@ -272,7 +289,7 @@ namespace CircularList
         }
 
         //Prepend<TSource>(IEnumerable<TSource>, TSource) – Добавляет значение в начало последовательности
-        public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> list, TSource data)
+        public static IEnumerable<TSource> Prepend<TSource>(this IEnumerable<TSource> list, TSource data) where TSource : IComparable
         {
             var newList = ((CircleList<TSource>)list).MyMemberwiseClone();
             newList.AddFirst(data);
@@ -280,7 +297,7 @@ namespace CircularList
         }
 
         //Reverse<TSource>(IEnumerable<TSource>) – Изменяет порядок элементов последовательности на противоположный
-        public static IEnumerable<TSource> Reverse<TSource>(this IEnumerable<TSource> list)
+        public static IEnumerable<TSource> Reverse<TSource>(this IEnumerable<TSource> list) where TSource : IComparable
         {
             if (list.Count() == 0)
             {
@@ -314,6 +331,108 @@ namespace CircularList
                 }
             }
             return newList;
+        }
+
+        //SequenceEqual<TSource>(IEnumerable<TSource>, IEnumerable<TSource>) – Определяет, совпадают ли две последовательности,
+        //используя для сравнения элементов компаратор проверки на равенство по умолчанию, предназначенный для их типа
+        public static bool SequenceEqual<TSource>(this IEnumerable<TSource> first, IEnumerable<TSource> second) where TSource : IComparable
+        {
+            if (first == null || second == null)
+            {
+                throw new ArgumentNullException();
+            }
+            if (first.Count() != second.Count())
+            {
+                return false;
+            }
+
+            int counter = 0;
+            var firstArray = new TSource[first.Count()];
+            var secondArray = new TSource[second.Count()];
+
+            foreach (var item in first)
+            {
+                firstArray[counter] = item;
+                counter++;
+            }
+
+            counter = 0;
+            foreach (var item in second)
+            {
+                secondArray[counter] = item;
+                counter++;
+            }
+
+            for (int i = 0; i < counter; i++)
+            {
+                if (firstArray[i].CompareTo(secondArray[i]) != 0)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+
+
+        }
+
+        //Single<TSource>(IEnumerable<TSource>) –Возвращает единственный элемент последовательности
+        //и генерирует исключение, если число элементов последовательности отлично от 1
+        public static TSource Single<TSource>(this IEnumerable<TSource> list)
+        {
+            if (list == null)
+            {
+                throw new ArgumentNullException();
+            }
+            else if (list.Count() != 1)
+            {
+                throw new InvalidOperationException();
+            }
+            else
+            {
+                foreach (var item in list)
+                {
+                    return item;
+                }
+            }
+            throw new InvalidOperationException();
+        }
+
+        //Take<TSource>(IEnumerable<TSource>, Int32) – Возвращает указанное число подряд идущих элементов с начала последовательности
+        public static IEnumerable<TSource> Take<TSource>(this IEnumerable<TSource> list, int number) where TSource : IComparable
+        {
+            if (list == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            int counter = 0;
+
+            IEnumerable<TSource> newList = new CircleList<TSource>();
+
+            if (number <= 0)
+            {
+                return newList;
+            }
+
+            foreach (var item in list)
+            {
+                counter++;
+                newList.Append(item);
+                if (counter == number)
+                {
+                    return newList;
+                }
+            }
+            return newList;
+        }
+
+        //TakeLast<TSource>(IEnumerable<TSource>, Int32) – Возвращает новую перечислимую
+        //коллекцию, содержащую последние count элементов из source
+        public static IEnumerable<TSource> TakeLast<TSource>(this IEnumerable<TSource> list, int number)
+        {
+            var newList = list.Reverse();
+            return newList.Take(number).Reverse();
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CircularList
 {
-    internal class CircleListNode<T>
+    internal class CircleListNode<T> where T : IComparable
     {
         public CircleListNode(T data)
         {
