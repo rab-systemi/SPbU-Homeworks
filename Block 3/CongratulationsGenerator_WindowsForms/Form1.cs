@@ -88,7 +88,10 @@ namespace CongratulationsGeneratorWF
 
         private void button7_Click(object sender, EventArgs e)
         {
-            Clipboard.SetText(textBox1.Text);
+            if (textBox1.Text != "")
+            {
+                Clipboard.SetText(textBox1.Text);
+            }
         }
     }
 }

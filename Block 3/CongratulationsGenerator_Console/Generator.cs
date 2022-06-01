@@ -142,7 +142,7 @@ namespace CongratulationsGenerator
                         int i = 0;
                         string message = default;
 
-                        if (holiday == "man" | holiday == "woman")
+                        if (holiday == "man" || holiday == "woman")
                         {
                             foreach (var ch in result)
                             {
