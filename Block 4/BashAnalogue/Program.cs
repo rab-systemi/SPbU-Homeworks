@@ -9,8 +9,6 @@ namespace BashAnalogue
         {
             MyBash myBash = new MyBash();
             myBash.Run();
-
-            
         }
     }
 }

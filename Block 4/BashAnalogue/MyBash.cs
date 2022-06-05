@@ -8,14 +8,6 @@ namespace BashAnalogue
 {
     internal class MyBash
     {
-        PwdCommand pwd = new();
-        CatCommand cat = new();
-        EchoCommand echo = new();
-        TrueCommand trueCommand = new();
-        FalseCommand falseCommand = new();
-        DollarQuestionCommand dollarQuestion = new();
-        WcCommand wc = new();
-
         private int LastResult;
         public void Run()
         {
@@ -25,8 +17,10 @@ namespace BashAnalogue
             {
                 Console.Write("$ ");
                 string input = Console.ReadLine();
+                input = input.Trim().ToLower();
 
-                parsedInput = input.Split(' ');
+                parsedInput = input.Split();
+                parsedInput = parsedInput.Where(val => val != "").ToArray();
 
                 int parsedInputLength = parsedInput.Length;
 
@@ -95,12 +89,220 @@ namespace BashAnalogue
 
         private void RunCommand(string[] input) //TO FINISH
         {
+            List<string> output = new();
+
             switch (input[0])
             {
-                case "pwd": //
-                    CheckOperators(input);
-                    input = input.Skip(1).ToArray();
-                    FileManager(input, pwd);
+                case "pwd":
+                    string pwdResult = Directory.GetCurrentDirectory();
+                    input = CheckOperators(input);
+                    if (input == null)
+                    {
+                        //Ничего не делаем
+                    }
+                    else if (input.Length == 1)
+                    {
+                        Console.WriteLine(pwdResult);
+                        Console.WriteLine();
+                        LastResult = 0;
+                    }
+                    else
+                    {
+                        output.Add(pwdResult);
+                        input = input.Skip(1).ToArray();
+                        FileManager(input, output);
+                    }
+                    output = default;
+                    break;
+                case "cat":
+                    input = CheckOperators(input);
+                    if (input == null)
+                    {
+                        //Ничего не делаем
+                    }
+                    else if (input.Length == 1)
+                    {
+                        Console.WriteLine("myBash: cat: some arguments are required\n");
+                        LastResult = 1;
+                    }
+                    else if (input.Length == 2)
+                    {
+                        string path = @input[1];
+                        try
+                        {
+                            using (StreamReader sr = new StreamReader(path))
+                            {
+                                string line;
+                                while ((line = sr.ReadLine()) != null)
+                                {
+                                    Console.WriteLine(line);
+                                }
+                            }
+                            Console.WriteLine();
+                            LastResult = 0;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(@$"myBash: {path}: No such file or directory");
+                            Console.WriteLine();
+                            LastResult = 1;
+                        }
+                    }
+                    else
+                    {
+                        string path = @input[1];
+                        try
+                        {
+                            using (StreamReader sr = new StreamReader(path))
+                            {
+                                string line;
+                                while ((line = sr.ReadLine()) != null)
+                                {
+                                    output.Add(line);
+                                }
+                            }
+                            input = input.Skip(2).ToArray();
+                            FileManager(input, output);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(@$"myBash: {path}: No such file or directory");
+                            Console.WriteLine();
+                            LastResult = 1;
+                        }
+                    }
+                    output = default;
+                    break;
+                case "echo":
+                    string outputString = "";
+                    input = CheckOperators(input);
+                    if (input == null)
+                    {
+                        //Ничего не делаем
+                    }
+                    else if (input.Length == 1)
+                    {
+                        Console.WriteLine();
+                        LastResult = 0;
+                    }
+                    else if (input.Length == 2)
+                    {
+                        if (input[1] == "$?")
+                        {
+                            Console.WriteLine(LastResult);
+                            Console.WriteLine();
+                            LastResult = 0;
+                        }
+                        else
+                        {
+                            Console.WriteLine(input[1]);
+                            Console.WriteLine();
+                            LastResult = 0;
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 1; i < input.Length; i++)
+                        {
+                            if (input[i] == "$?")
+                            {
+                                input[i] = LastResult.ToString();
+                            }
+                            else if (input[i] == ">" || input[i] == "<" || input[i] == ">>")
+                            {
+                                for (int j = 1; j < i; j++)
+                                {
+                                    outputString = outputString + input[j];
+                                    outputString = outputString + " ";
+                                }
+                                input = input.Skip(i).ToArray();
+                                output.Add(outputString);
+                                break;
+                            }
+                        }
+                        if (input[0] == ">" || input[0] == "<" || input[0] == ">>")
+                        {
+                            FileManager(input, output);
+                        }
+                        else
+                        {
+                            for (int i = 1; i < input.Length; i++)
+                            {
+                                Console.Write(input[i]);
+                                Console.Write(" ");
+                            }
+                            Console.WriteLine();
+                            Console.WriteLine();
+                            LastResult = 0;
+                        }
+                    }
+                    output = default;
+                    break;
+                case "true":
+                    input = CheckOperators(input);
+                    if (input == null)
+                    {
+                        //Ничего не делаем
+                    }
+                    else if (input.Length == 1)
+                    {
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        for (int i = 1; i < input.Length; i++)
+                        {
+                            if (input[i] == ">" || input[i] == "<" || input[i] == ">>")
+                            {
+                                input = input.Skip(i).ToArray();
+                                output.Add("");
+                                break;
+                            }
+                        }
+                        if (input[0] == ">" || input[0] == "<" || input[0] == ">>")
+                        {
+                            FileManager(input, output);
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                        }
+                    }
+                    LastResult = 0;
+                    output = default;
+                    break;
+                case "false":
+                    input = CheckOperators(input);
+                    if (input == null)
+                    {
+                        //Ничего не делаем
+                    }
+                    else if (input.Length == 1)
+                    {
+                        Console.WriteLine();
+                    }
+                    else
+                    {
+                        for (int i = 1; i < input.Length; i++)
+                        {
+                            if (input[i] == ">" || input[i] == "<" || input[i] == ">>")
+                            {
+                                input = input.Skip(i).ToArray();
+                                output.Add("");
+                                break;
+                            }
+                        }
+                        if (input[0] == ">" || input[0] == "<" || input[0] == ">>")
+                        {
+                            FileManager(input, output);
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                        }
+                    }
+                    LastResult = 1;
+                    output = default;
                     break;
                 default:
                     //Какой-то код
@@ -108,17 +310,19 @@ namespace BashAnalogue
             }
         }
 
-        private void CheckOperators(string[] command)
+        private string[] CheckOperators(string[] command)
         {
-            if (command[^1] == ">" || command[^1] == "<")
+            if (command[^1] == ">" || command[^1] == "<" || command[^1] == ">>")
             {
-                Console.WriteLine("myBash: syntax error near unexpected token 'newline'");
-                command = default;
+                Console.WriteLine("myBash: syntax error near unexpected token 'newline'\n");
+                command = null;
                 LastResult = 1;
+                return command;
             }
+            return command;
         }
 
-        private void FileManager(string[] input, Command command)
+        private void FileManager(string[] input, List<string> output)
         {
             bool fileWriteFlag = false; //Флажок записи в файл: если false, то в файл ничего не записывалось. True - иначе
             while (input != null && input.Length > 0)
@@ -127,127 +331,92 @@ namespace BashAnalogue
                 {
                     if (input[i] == ">" && input.Length > (i + 1))
                     {
-                        string fullPath = @input[i + 1]; //Если пользователь ввел полный путь для файла
-                        string currentDirectory = Directory.GetCurrentDirectory() + "\\";
-                        string currentPath = currentDirectory + input[i + 1]; //Если пользователь ввел только название файла
+                        string fullPath = @input[i + 1]; //Путь для файла
 
-                        if (File.Exists(fullPath)) //Если файл по полному пути существует
+                        if (File.Exists(fullPath)) //Если файл существует
                         {
                             using (StreamWriter writer = new StreamWriter(fullPath, false))
                             {
-                                writer.WriteLine(command.Run());
+                                foreach (var item in output)
+                                {
+                                    writer.WriteLine(item);
+                                }
                             }
-                            //File.WriteAllText(fullPath, command.Run());
                             input = input.Skip(i + 2).ToArray();
                             LastResult = 0;
                             fileWriteFlag = true;
+                            Console.WriteLine();
                             break;
                         }
-                        else if (!File.Exists(fullPath)) //Если файл по полному пути НЕ существует
+                        else if (!File.Exists(fullPath)) //Если файл НЕ существует
                         {
                             try
                             {
                                 using (StreamWriter writer = new StreamWriter(fullPath, false))
                                 {
-                                    writer.WriteLine(command.Run());
+                                    foreach (var item in output)
+                                    {
+                                        writer.WriteLine(item);
+                                    }
                                 }
-                                /*
-                                File.Create(fullPath);
-                                using (StreamWriter sw = File.CreateText(fullPath))
-                                {
-                                    sw.WriteLine(command.Run());
-                                }
-                                */
                                 input = input.Skip(i + 2).ToArray();
                                 LastResult = 0;
                                 fileWriteFlag = true;
+                                Console.WriteLine();
                                 break;
 
                             }
                             catch (Exception e)
                             {
                                 Console.WriteLine(@$"myBash: {fullPath}: No such file or directory");
+                                Console.WriteLine();
                                 input = null;
                                 LastResult = 1;
                                 break;
                             }
                         }
-                        /*
-                        else if (File.Exists(currentPath)) //Если файл по названию существует
-                        {
-                            File.WriteAllText(currentPath, command.Run());
-                            input = input.Skip(i + 2).ToArray();
-                            LastResult = 0;
-                            fileWriteFlag = true;
-                            break;
-                        }
-                        else if (!File.Exists(currentPath)) //Если файл по названию НЕ существует
-                        {
-                            try
-                            {
-                                File.Create(currentPath);
-                                using (StreamWriter sw = File.CreateText(currentPath))
-                                {
-                                    sw.WriteLine(command.Run());
-                                }
-                                input = input.Skip(i + 2).ToArray();
-                                LastResult = 0;
-                                fileWriteFlag = true;
-                                break;
-
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine(@$"myBash: {currentPath}: No such file or directory");
-                                input = null;
-                                LastResult = 1;
-                                break;
-                            }
-                        }
-                        */
                     }
                     else if (input[i] == ">>" && input.Length > (i + 1))
                     {
-                        string fullPath = @input[i + 1]; //Если пользователь ввел полный путь для файла
-                        string currentDirectory = Directory.GetCurrentDirectory() + "\\";
-                        string currentPath = currentDirectory + input[i + 1]; //Если пользователь ввел только название файла
+                        string fullPath = @input[i + 1]; //Путь для файла
 
-                        if (File.Exists(fullPath)) //Если файл по полному пути существует
+                        if (File.Exists(fullPath)) //Если файл существует
                         {
                             using (StreamWriter writer = new StreamWriter(fullPath, true))
                             {
-                                writer.WriteLine(command.Run());
+                                foreach (var item in output)
+                                {
+                                    writer.WriteLine(item);
+                                }
                             }
-                            //File.WriteAllText(fullPath, command.Run());
                             input = input.Skip(i + 2).ToArray();
                             LastResult = 0;
                             fileWriteFlag = true;
+                            Console.WriteLine();
                             break;
                         }
-                        else if (!File.Exists(fullPath)) //Если файл по полному пути НЕ существует
+                        else if (!File.Exists(fullPath)) //Если файл НЕ существует
                         {
                             try
                             {
                                 using (StreamWriter writer = new StreamWriter(fullPath, true))
                                 {
-                                    writer.WriteLine(command.Run());
+                                    foreach (var item in output)
+                                    {
+                                        writer.WriteLine(item);
+                                    }
                                 }
-                                /*
-                                File.Create(fullPath);
-                                using (StreamWriter sw = File.CreateText(fullPath))
-                                {
-                                    sw.WriteLine(command.Run());
-                                }
-                                */
                                 input = input.Skip(i + 2).ToArray();
                                 LastResult = 0;
                                 fileWriteFlag = true;
+                                Console.WriteLine();
                                 break;
 
                             }
                             catch (Exception e)
                             {
                                 Console.WriteLine(@$"myBash: {fullPath}: No such file or directory");
+                                Console.WriteLine();
                                 input = null;
                                 LastResult = 1;
                                 break;
@@ -256,15 +425,41 @@ namespace BashAnalogue
                     }
                     else if (input[i] == "<" && input.Length > (i + 1)) //TO FINISH
                     {
-                        string result = command.Run();
-                        Console.WriteLine(result);
-                        Console.WriteLine();
+                        if (!fileWriteFlag)
+                        {
+                            foreach (var item in output)
+                            {
+                                Console.WriteLine(item);
+                            }
+                            Console.WriteLine();
+                            input = input.Skip(1).ToArray();
+                            LastResult = 0;
+                            break;
+                        }
+                        else
+                        {
+                            input = input.Skip(1).ToArray();
+                            break;
+                        }
                     }
                     else
                     {
-                        string result = command.Run();
-                        Console.WriteLine(result);
-                        Console.WriteLine();
+                        if (!fileWriteFlag)
+                        {
+                            foreach (var item in output)
+                            {
+                                Console.WriteLine(item);
+                            }
+                            Console.WriteLine();
+                            input = input.Skip(1).ToArray();
+                            LastResult = 0;
+                            break;
+                        }
+                        else
+                        {
+                            input = input.Skip(1).ToArray();
+                            break;
+                        }
                     }
                 }
                 continue;
