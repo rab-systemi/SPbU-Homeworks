@@ -9,6 +9,9 @@ namespace BashAnalogue
     internal class MyBash
     {
         private int LastResult;
+
+        private List<KeyValue<string, string>> LocalVariables = new();
+
         public void Run()
         {
             string[] parsedInput;
@@ -23,66 +26,161 @@ namespace BashAnalogue
                 parsedInput = parsedInput.Where(val => val != "").ToArray();
 
                 int parsedInputLength = parsedInput.Length;
+                List<int> connectorsIndexes = new List<int>();
 
-                while (parsedInput != null && parsedInput.Length > 0)
+                if (parsedInput.Length > 0)
                 {
-                    for (int i = 0; i < parsedInput.Length; i++)
+                    if (parsedInput[0] == "&&" || parsedInput[0] == "||" || parsedInput[0] == ";")
                     {
-                        if (parsedInput[i] == "&&") /////
+                        Console.WriteLine("myBash: syntax error near unexpected token\n");
+                        LastResult = 1;
+                        continue;
+                    }
+                    else if (parsedInput[^1] == "&&" || parsedInput[^1] == "||" || parsedInput[^1] == ";")
+                    {
+                        Console.WriteLine("myBash: syntax error near unexpected token\n");
+                        LastResult = 1;
+                        continue;
+                    }
+                }
+
+                for (int i = 0; i < parsedInputLength; i++)
+                {
+                    if (parsedInput[i] == "&&" || parsedInput[i] == "||" || parsedInput[i] == ";")
+                    {
+                        connectorsIndexes.Add(i);
+                    }
+                }
+                
+                if (connectorsIndexes.Count > 0)
+                {
+                    int connectorsIndexesCount = connectorsIndexes.Count;
+                    int previousConnectorIndex = default;
+
+                    while (connectorsIndexes.Count > 0)
+                    {
+                        if (connectorsIndexes.Count == connectorsIndexesCount)
                         {
-                            if (parsedInput.Length == parsedInputLength) //Если массив ввода не менялся
+                            if (connectorsIndexesCount == 1)
                             {
-                                string[] firstCommand = parsedInput.Take(i).ToArray();
-                                
-                                parsedInput = parsedInput.Skip(i + 1).ToArray(); //Код, исполняющий firstCommand
-                                break;
-                            }
-                            else //Если массив ввода был изменен
-                            {
-                                string[] secondCommand = parsedInput.Take(i).ToArray();
-                                if (LastResult == 0)
-                                {
-                                    RunCommand(secondCommand); //Код, исполняющий secondCommand
-                                }
-                                parsedInput = parsedInput.Skip(i + 1).ToArray();
-                                break;
-                            }
-                        }
-                        else if (parsedInput[i] == "||") /////
-                        {
-                            if (parsedInput.Length == parsedInputLength) //Если массив ввода не менялся
-                            {
-                                string[] firstCommand = parsedInput.Take(i).ToArray();
+                                string[] firstCommand = parsedInput.Take(connectorsIndexes[0]).ToArray();
                                 RunCommand(firstCommand);
-                                parsedInput = parsedInput.Skip(i + 1).ToArray();
-                                break;
-                            }
-                            else //Если массив ввода был изменен
-                            {
-                                string[] secondCommand = parsedInput.Take(i).ToArray();
-                                if (LastResult != 0)
+                                string[] lastCommand = parsedInput.Skip(connectorsIndexes[0] + 1).ToArray();
+
+                                if (parsedInput[connectorsIndexes[0]] == "&&")
                                 {
-                                    RunCommand(secondCommand);
+                                    if (LastResult == 0)
+                                    {
+                                        RunCommand(lastCommand);
+                                    }
                                 }
-                                parsedInput = parsedInput.Skip(i + 1).ToArray();
-                                break;
+                                else if (parsedInput[connectorsIndexes[0]] == "||")
+                                {
+                                    if (LastResult == 1)
+                                    {
+                                        RunCommand(lastCommand);
+                                    }
+                                }
+                                else //Единственный коннектор ;
+                                {
+                                    RunCommand(lastCommand);
+                                }
+                                connectorsIndexes.RemoveAt(0);
                             }
-                        }
-                        else if (parsedInput[i] == ";") /////
-                        {
-                            string[] currentCommand = parsedInput.Take(i).ToArray();
-                            RunCommand(currentCommand);
-                            parsedInput = parsedInput.Skip(i + 1).ToArray();
-                            break;
+                            else
+                            {
+                                string[] firstCommand = parsedInput.Take(connectorsIndexes[0]).ToArray();
+                                RunCommand(firstCommand);
+                                previousConnectorIndex = connectorsIndexes[0];
+                                connectorsIndexes.RemoveAt(0);
+                            }
                         }
                         else
                         {
-                            RunCommand(parsedInput);
-                            parsedInput = null;
-                            break;
+                            if (connectorsIndexes.Count == 1)
+                            {
+                                if (parsedInput[previousConnectorIndex] == "&&")
+                                {
+                                    if (LastResult == 0)
+                                    {
+                                        string[] nextCommand = parsedInput.Take(connectorsIndexes[0]).ToArray();
+                                        nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                        RunCommand(nextCommand);
+                                    }
+                                }
+                                else if (parsedInput[previousConnectorIndex] == "||")
+                                {
+                                    if (LastResult == 1)
+                                    {
+                                        string[] nextCommand = parsedInput.Take(connectorsIndexes[0]).ToArray();
+                                        nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                        RunCommand(nextCommand);
+                                    }
+                                }
+                                else //Единственный коннектор ;
+                                {
+                                    string[] nextCommand = parsedInput.Take(connectorsIndexes[0]).ToArray();
+                                    nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                    RunCommand(nextCommand);
+                                }
+                                string[] lastCommand = parsedInput.Skip(connectorsIndexes[0] + 1).ToArray();
+
+                                if (parsedInput[(connectorsIndexes[0])] == "&&")
+                                {
+                                    if (LastResult == 0)
+                                    {
+                                        RunCommand(lastCommand);
+                                    }
+                                }
+                                else if (parsedInput[(connectorsIndexes[0])] == "||")
+                                {
+                                    if (LastResult == 1)
+                                    {
+                                        RunCommand(lastCommand);
+                                    }
+                                }
+                                else //Единственный коннектор ;
+                                {
+                                    RunCommand(lastCommand);
+                                }
+                                connectorsIndexes.RemoveAt(0);
+                            }
+                            else
+                            {
+                                if (parsedInput[previousConnectorIndex] == "&&")
+                                {
+                                    if (LastResult == 0)
+                                    {
+                                        string[] nextCommand = parsedInput.Take(connectorsIndexes[0]).ToArray();
+                                        nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                        RunCommand(nextCommand);
+                                    }
+                                }
+                                else if (parsedInput[previousConnectorIndex] == "||")
+                                {
+                                    if (LastResult == 1)
+                                    {
+                                        string[] nextCommand = parsedInput.Take(connectorsIndexes[0]).ToArray();
+                                        nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                        RunCommand(nextCommand);
+                                    }
+                                }
+                                else //Единственный коннектор ;
+                                {
+                                    string[] nextCommand = parsedInput.Take(connectorsIndexes[0]).ToArray();
+                                    nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                    RunCommand(nextCommand);
+                                }
+                                previousConnectorIndex = connectorsIndexes[0];
+                                connectorsIndexes.RemoveAt(0);
+
+                            }
                         }
                     }
-                    continue;
+                }
+                else
+                {
+                    RunCommand(parsedInput);
                 }
             }
         }
@@ -193,6 +291,34 @@ namespace BashAnalogue
                             Console.WriteLine();
                             LastResult = 0;
                         }
+                        else if (input[1][0] == '$' && input[1].Length > 1)
+                        {
+                            string id = input[1].TrimStart('$');
+                            string text = "";
+                            bool findFlag = false;
+
+                            foreach (var item in LocalVariables)
+                            {
+                                if (item.Id == id)
+                                {
+                                    text = item.Text;
+                                    findFlag = true;
+                                }
+                            }
+
+                            if (findFlag)
+                            {
+                                Console.WriteLine(text);
+                                Console.WriteLine();
+                                LastResult = 0;
+                            }
+                            else
+                            {
+                                Console.WriteLine();
+                                Console.WriteLine();
+                                LastResult = 0;
+                            }
+                        }
                         else
                         {
                             Console.WriteLine(input[1]);
@@ -207,6 +333,30 @@ namespace BashAnalogue
                             if (input[i] == "$?")
                             {
                                 input[i] = LastResult.ToString();
+                            }
+                            else if (input[i][0] == '$' && input[i].Length > 1)
+                            {
+                                string id = input[i].TrimStart('$');
+                                string text = "";
+                                bool findFlag = false;
+
+                                foreach (var item in LocalVariables)
+                                {
+                                    if (item.Id == id)
+                                    {
+                                        text = item.Text;
+                                        findFlag = true;
+                                    }
+                                }
+
+                                if (findFlag)
+                                {
+                                    input[i] = text;
+                                }
+                                else
+                                {
+                                    input[i] = "";
+                                }
                             }
                             else if (input[i] == ">" || input[i] == "<" || input[i] == ">>")
                             {
@@ -246,6 +396,7 @@ namespace BashAnalogue
                     }
                     else if (input.Length == 1)
                     {
+                        LastResult = 0;
                         Console.WriteLine();
                     }
                     else
@@ -279,6 +430,7 @@ namespace BashAnalogue
                     }
                     else if (input.Length == 1)
                     {
+                        LastResult = 1;
                         Console.WriteLine();
                     }
                     else
@@ -304,8 +456,372 @@ namespace BashAnalogue
                     LastResult = 1;
                     output = default;
                     break;
+                case "wc":
+                    input = CheckOperators(input);
+                    if (input == null)
+                    {
+                        //Ничего не делаем
+                    }
+                    else if (input.Length == 1)
+                    {
+                        Console.WriteLine("myBash: wc: some arguments are required\n");
+                        LastResult = 1;
+                    }
+                    else if (input.Length == 2)
+                    {
+                        int linesCount = 0;
+                        int wordsCount = 0;
+                        long bytesCount = 0;
+                        string path = @input[1];
+                        try
+                        {
+                            bytesCount = new FileInfo(path).Length; //Считаем количество байт в файле
+                            using (StreamReader sr = new StreamReader(path))
+                            {
+                                string line;
+                                while ((line = sr.ReadLine()) != null)
+                                {
+                                    linesCount++;
+                                    line = line.Trim();
+                                    string[] parsedLine = line.Split();
+                                    parsedLine = parsedLine.Where(val => val != "").ToArray();
+                                    wordsCount += parsedLine.Length;
+                                }
+                            }
+                            Console.Write(linesCount + " " + wordsCount + " " + bytesCount);
+                            Console.WriteLine("\n");
+                            LastResult = 0;
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(@$"myBash: {path}: No such file or directory");
+                            Console.WriteLine();
+                            LastResult = 1;
+                        }
+                    }
+                    else
+                    {
+                        int linesCount = 0;
+                        int wordsCount = 0;
+                        long bytesCount = 0;
+                        string path = @input[1];
+                        try
+                        {
+                            bytesCount = new FileInfo(path).Length; //Считаем количество байт в файле
+                            using (StreamReader sr = new StreamReader(path))
+                            {
+                                string line;
+                                while ((line = sr.ReadLine()) != null)
+                                {
+                                    linesCount++;
+                                    line = line.Trim();
+                                    string[] parsedLine = line.Split();
+                                    parsedLine = parsedLine.Where(val => val != "").ToArray();
+                                    wordsCount += parsedLine.Length;
+                                }
+                            }
+                            string outputData = linesCount.ToString() + " " + wordsCount.ToString() + " " + bytesCount.ToString();
+                            output.Add(outputData);
+                            input = input.Skip(2).ToArray();
+                            FileManager(input, output);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(@$"myBash: {path}: No such file or directory");
+                            Console.WriteLine();
+                            LastResult = 1;
+                        }
+                    }
+                    output = default;
+                    break;
+                case "scr":
+                    input = CheckOperators(input);
+                    if (input == null)
+                    {
+                        //Ничего не делаем
+                    }
+                    else if (input.Length == 1)
+                    {
+                        Console.WriteLine("myBash: scr: some arguments are required\n");
+                        LastResult = 1;
+                    }
+                    else
+                    {
+                        string path = @input[1];
+                        try
+                        {
+                            using (StreamReader sr = new StreamReader(path))
+                            {
+                                string line;
+                                while ((line = sr.ReadLine()) != null)
+                                {
+                                    line = line.Trim().ToLower();
+
+                                    string[] fileCommand = line.Split();
+                                    fileCommand = fileCommand.Where(val => val != "").ToArray();
+                                    int parsedInputLength = fileCommand.Length;
+                                    List<int> connectorsIndexes = new List<int>();
+
+                                    if (fileCommand.Length > 0)
+                                    {
+                                        if (fileCommand[0] == "&&" || fileCommand[0] == "||" || fileCommand[0] == ";")
+                                        {
+                                            Console.WriteLine("myBash: syntax error near unexpected token\n");
+                                            LastResult = 1;
+                                            continue;
+                                        }
+                                        else if (fileCommand[^1] == "&&" || fileCommand[^1] == "||" || fileCommand[^1] == ";")
+                                        {
+                                            Console.WriteLine("myBash: syntax error near unexpected token\n");
+                                            LastResult = 1;
+                                            continue;
+                                        }
+                                    }
+
+                                    for (int i = 0; i < parsedInputLength; i++)
+                                    {
+                                        if (fileCommand[i] == "&&" || fileCommand[i] == "||" || fileCommand[i] == ";")
+                                        {
+                                            connectorsIndexes.Add(i);
+                                        }
+                                    }
+
+                                    if (connectorsIndexes.Count > 0)
+                                    {
+                                        int connectorsIndexesCount = connectorsIndexes.Count;
+                                        int previousConnectorIndex = default;
+
+                                        while (connectorsIndexes.Count > 0)
+                                        {
+                                            if (connectorsIndexes.Count == connectorsIndexesCount)
+                                            {
+                                                if (connectorsIndexesCount == 1)
+                                                {
+                                                    string[] firstCommand = fileCommand.Take(connectorsIndexes[0]).ToArray();
+                                                    RunCommand(firstCommand);
+                                                    string[] lastCommand = fileCommand.Skip(connectorsIndexes[0] + 1).ToArray();
+
+                                                    if (fileCommand[connectorsIndexes[0]] == "&&")
+                                                    {
+                                                        if (LastResult == 0)
+                                                        {
+                                                            RunCommand(lastCommand);
+                                                        }
+                                                    }
+                                                    else if (fileCommand[connectorsIndexes[0]] == "||")
+                                                    {
+                                                        if (LastResult == 1)
+                                                        {
+                                                            RunCommand(lastCommand);
+                                                        }
+                                                    }
+                                                    else //Единственный коннектор ;
+                                                    {
+                                                        RunCommand(lastCommand);
+                                                    }
+                                                    connectorsIndexes.RemoveAt(0);
+                                                }
+                                                else
+                                                {
+                                                    string[] firstCommand = fileCommand.Take(connectorsIndexes[0]).ToArray();
+                                                    RunCommand(firstCommand);
+                                                    previousConnectorIndex = connectorsIndexes[0];
+                                                    connectorsIndexes.RemoveAt(0);
+                                                }
+                                            }
+                                            else
+                                            {
+                                                if (connectorsIndexes.Count == 1)
+                                                {
+                                                    if (fileCommand[previousConnectorIndex] == "&&")
+                                                    {
+                                                        if (LastResult == 0)
+                                                        {
+                                                            string[] nextCommand = fileCommand.Take(connectorsIndexes[0]).ToArray();
+                                                            nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                                            RunCommand(nextCommand);
+                                                        }
+                                                    }
+                                                    else if (fileCommand[previousConnectorIndex] == "||")
+                                                    {
+                                                        if (LastResult == 1)
+                                                        {
+                                                            string[] nextCommand = fileCommand.Take(connectorsIndexes[0]).ToArray();
+                                                            nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                                            RunCommand(nextCommand);
+                                                        }
+                                                    }
+                                                    else //Единственный коннектор ;
+                                                    {
+                                                        string[] nextCommand = fileCommand.Take(connectorsIndexes[0]).ToArray();
+                                                        nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                                        RunCommand(nextCommand);
+                                                    }
+                                                    string[] lastCommand = fileCommand.Skip(connectorsIndexes[0] + 1).ToArray();
+
+                                                    if (fileCommand[(connectorsIndexes[0])] == "&&")
+                                                    {
+                                                        if (LastResult == 0)
+                                                        {
+                                                            RunCommand(lastCommand);
+                                                        }
+                                                    }
+                                                    else if (fileCommand[(connectorsIndexes[0])] == "||")
+                                                    {
+                                                        if (LastResult == 1)
+                                                        {
+                                                            RunCommand(lastCommand);
+                                                        }
+                                                    }
+                                                    else //Единственный коннектор ;
+                                                    {
+                                                        RunCommand(lastCommand);
+                                                    }
+                                                    connectorsIndexes.RemoveAt(0);
+                                                }
+                                                else
+                                                {
+                                                    if (fileCommand[previousConnectorIndex] == "&&")
+                                                    {
+                                                        if (LastResult == 0)
+                                                        {
+                                                            string[] nextCommand = fileCommand.Take(connectorsIndexes[0]).ToArray();
+                                                            nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                                            RunCommand(nextCommand);
+                                                        }
+                                                    }
+                                                    else if (fileCommand[previousConnectorIndex] == "||")
+                                                    {
+                                                        if (LastResult == 1)
+                                                        {
+                                                            string[] nextCommand = fileCommand.Take(connectorsIndexes[0]).ToArray();
+                                                            nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                                            RunCommand(nextCommand);
+                                                        }
+                                                    }
+                                                    else //Единственный коннектор ;
+                                                    {
+                                                        string[] nextCommand = fileCommand.Take(connectorsIndexes[0]).ToArray();
+                                                        nextCommand = nextCommand.Skip(previousConnectorIndex + 1).ToArray();
+                                                        RunCommand(nextCommand);
+                                                    }
+                                                    previousConnectorIndex = connectorsIndexes[0];
+                                                    connectorsIndexes.RemoveAt(0);
+
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        RunCommand(fileCommand);
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(@$"myBash: {path}: No such file or directory");
+                            Console.WriteLine();
+                            LastResult = 1;
+                        }
+                    }
+                    output = default;
+                    break;
                 default:
-                    //Какой-то код
+                    input = CheckOperators(input);
+                    if (input == null)
+                    {
+                        //Ничего не делаем
+                    }
+                    else if (input.Length == 1)
+                    {
+                        if (input[0][0] == '$' && input[0].Length > 1) //TO FINISH
+                        {
+                            bool findFlag = false;
+                            string id = input[0].TrimStart('$');
+                            string textCommand = default;
+
+                            foreach (var item in LocalVariables)
+                            {
+                                if (item.Id == id)
+                                {
+                                    textCommand = item.Text;
+                                    findFlag = true;
+                                }
+                            }
+
+                            if (findFlag)
+                            {
+                                string[] command = { textCommand };
+                                RunCommand(command);
+                            }
+                            else
+                            {
+                                LastResult = 0;
+                                Console.WriteLine();
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"myBash: {input[0]}: command not found\n");
+                            LastResult = 1;
+                        }
+                    }
+                    else
+                    {
+                        if (input[1] != "=")
+                        {
+                            Console.WriteLine($"myBash: {input[0]}: command not found\n");
+                            LastResult = 1;
+                        }
+                        else
+                        {
+                            if (input.Length == 2)
+                            {
+                                bool changeFlag = false;
+
+                                for (int i = 0; i < LocalVariables.Count; i++)
+                                {
+                                    if (LocalVariables[i].Id == input[0])
+                                    {
+                                        LocalVariables[i].Text = "";
+                                        changeFlag = true;
+                                    }
+                                }
+                                if (changeFlag)
+                                {
+                                    //Ничего не делаем, уже все сделано
+                                }
+                                else
+                                {
+                                    LocalVariables.Add(new KeyValue<string, string>(input[0], ""));
+                                }
+                            }
+                            else
+                            {
+                                bool changeFlag = false;
+
+                                for (int i = 0; i < LocalVariables.Count; i++)
+                                {
+                                    if (LocalVariables[i].Id == input[0])
+                                    {
+                                        LocalVariables[i].Text = input[2];
+                                        changeFlag = true;
+                                    }
+                                }
+                                if (changeFlag)
+                                {
+                                    //Ничего не делаем, уже все сделано
+                                }
+                                else
+                                {
+                                    LocalVariables.Add(new KeyValue<string, string>(input[0], input[2]));
+                                }
+                            }
+                            Console.WriteLine();
+                        }
+                    }
                     break;
             }
         }
@@ -432,13 +948,15 @@ namespace BashAnalogue
                                 Console.WriteLine(item);
                             }
                             Console.WriteLine();
-                            input = input.Skip(1).ToArray();
+                            input = null; //
+                            //input = input.Skip(1).ToArray();
                             LastResult = 0;
                             break;
                         }
                         else
                         {
-                            input = input.Skip(1).ToArray();
+                            input = null; //
+                            //input = input.Skip(1).ToArray();
                             break;
                         }
                     }
@@ -451,13 +969,15 @@ namespace BashAnalogue
                                 Console.WriteLine(item);
                             }
                             Console.WriteLine();
-                            input = input.Skip(1).ToArray();
+                            input = null; //
+                            //input = input.Skip(1).ToArray();
                             LastResult = 0;
                             break;
                         }
                         else
                         {
-                            input = input.Skip(1).ToArray();
+                            input = null; //
+                            //input = input.Skip(1).ToArray();
                             break;
                         }
                     }
