@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.2.32526.322
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1758
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherWindowsForms", "WeatherWindowsForms.csproj", "{483F483F-6B92-4B6C-A179-BF280BBA955E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WeatherWindowsForms", "WeatherWindowsForms\WeatherWindowsForms.csproj", "{EC4DD0BF-25F3-4967-B0DA-547F9DB44793}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +11,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{483F483F-6B92-4B6C-A179-BF280BBA955E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{483F483F-6B92-4B6C-A179-BF280BBA955E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{483F483F-6B92-4B6C-A179-BF280BBA955E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{483F483F-6B92-4B6C-A179-BF280BBA955E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC4DD0BF-25F3-4967-B0DA-547F9DB44793}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC4DD0BF-25F3-4967-B0DA-547F9DB44793}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC4DD0BF-25F3-4967-B0DA-547F9DB44793}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC4DD0BF-25F3-4967-B0DA-547F9DB44793}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {2458F420-DC5D-433E-8ABE-E7A9FCC9102A}
+		SolutionGuid = {92047F05-81F2-41BD-9EA1-72623CBABE64}
 	EndGlobalSection
 EndGlobal
